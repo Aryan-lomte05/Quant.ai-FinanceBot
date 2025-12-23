@@ -1,28 +1,48 @@
 "use client";
 
+import { motion } from 'framer-motion';
+import { Sparkles, TrendingUp, Target, AlertCircle, Calculator, Calendar } from 'lucide-react';
+
 const queries = [
-    "What's my food budget?",
-    "Can I afford this?",
-    "Show savings forecast",
-    "Analyze spending"
+    { text: "What's my food budget?", icon: Target, color: 'mint' },
+    { text: "Can I afford ₹15K laptop?", icon: Calculator, color: 'skyBlue' },
+    { text: "Show savings forecast", icon: TrendingUp, color: 'lavender' },
+    { text: "Analyze my spending", icon: Sparkles, color: 'coral' },
+    { text: "Budget alert status", icon: AlertCircle, color: 'coral' },
+    { text: "Upcoming bills", icon: Calendar, color: 'skyBlue' },
 ];
 
 interface SuggestedQueriesProps {
     onSelect: (query: string) => void;
+    disabled?: boolean;
 }
 
-export function SuggestedQueries({ onSelect }: SuggestedQueriesProps) {
+export function SuggestedQueries({ onSelect, disabled }: SuggestedQueriesProps) {
     return (
-        <div className="flex flex-wrap gap-2">
-            {queries.map((query) => (
-                <button
-                    key={query}
-                    onClick={() => onSelect(query)}
-                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors"
-                >
-                    {query}
-                </button>
-            ))}
+        <div className="space-y-3">
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <Sparkles className="w-4 h-4" />
+                <span>Try asking...</span>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+                {queries.map((query, index) => (
+                    <motion.button
+                        key={query.text}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => !disabled && onSelect(query.text)}
+                        disabled={disabled}
+                        className={`flex items-center gap-2 px-4 py-2.5 glass border-2 border-white/50 rounded-full text-sm font-medium text-gray-700 hover:border-${query.color}-500/50 hover:bg-${query.color}-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                    >
+                        <query.icon className={`w-4 h-4 text-${query.color}-600`} />
+                        {query.text}
+                    </motion.button>
+                ))}
+            </div>
         </div>
     );
 }

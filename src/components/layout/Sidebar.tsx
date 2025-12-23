@@ -11,6 +11,7 @@ import {
     MessageCircle,
     Settings,
     Sparkles,
+    Trophy,
 } from "lucide-react";
 
 const navigation = [
@@ -19,6 +20,7 @@ const navigation = [
     { name: "Budget", href: "/budget", icon: Target },
     { name: "Goals", href: "/goals", icon: Sparkles },
     { name: "Insights", href: "/insights", icon: TrendingUp },
+    { name: "Achievements", href: "/gamification", icon: Trophy }, // NEW
     { name: "AI Chat", href: "/chat", icon: MessageCircle },
     { name: "Settings", href: "/settings", icon: Settings },
 ];
