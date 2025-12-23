@@ -14,6 +14,7 @@ import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { EmergencyFundBarometer } from "@/components/dashboard/EmergencyFundBarometer";
+import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
@@ -92,24 +93,12 @@ export default function DashboardPage() {
       <BudgetProgressBars />
       {/* NEW: Emergency Fund Barometer - Feature #9 */}
       <EmergencyFundBarometer />
+      {/* NEW: Spending Insights - Feature #10 */}
+      <SpendingInsights />
 
 
-      {/* AI Insights Preview */}
-      <div className="glass p-6 rounded-2xl border-2 border-white/50">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-lavender-100 rounded-xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-lavender-600" />
-          </div>
-          <div>
-            <h3 className="font-bold text-gray-900">AI Insights</h3>
-            <p className="text-sm text-gray-600">Powered by Phi-3.5</p>
-          </div>
-        </div>
-        <p className="text-gray-700">
-          💡 You're on track to save <strong>₹45,600</strong> in the next 90 days!
-          Consider allocating more to your Europe Trip goal.
-        </p>
-      </div>
+
+
     </div>
   );
 }
