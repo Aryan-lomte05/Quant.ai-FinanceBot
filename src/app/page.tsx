@@ -6,7 +6,8 @@ import { QuickStats } from "@/components/dashboard/QuickStats";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
-import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel"; // NEW
+import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel";
+import { SpendingDonutChart } from "@/components/dashboard/SpendingDonutChart"; // NEW
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -76,8 +77,11 @@ export default function DashboardPage() {
         <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
       </div>
 
-      {/* NEW: Upcoming Bills Carousel - Feature #5 */}
+      {/* Upcoming Bills Carousel */}
       <UpcomingBillsCarousel />
+
+      {/* NEW: Spending Donut Chart - Feature #6 */}
+      <SpendingDonutChart />
 
       {/* Spending Chart */}
       <SpendingChart data={spendingData} />
