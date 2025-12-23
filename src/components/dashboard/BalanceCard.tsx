@@ -145,7 +145,7 @@ export function BalanceCard({ balance, trend, trendPercentage }: BalanceCardProp
                     <motion.div
                         initial={{ scale: 0, rotate: -180 }}
                         animate={{ scale: 1, rotate: 0 }}
-                        transition={{ delay: 0.3, type: 'spring' }}
+                        transition={{ delay: 0.3, type: 'spring' as const }}
                         whileHover={{ scale: 1.1, rotate: 10 }}
                         className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl"
                     >

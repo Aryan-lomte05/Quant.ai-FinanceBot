@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { TrendingUp, TrendingDown, PiggyBank, Wallet, Percent, Zap } from 'lucide-react';
 import { NumericFormat } from 'react-number-format';
 
@@ -52,7 +52,7 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
     ];
 
     // Staggered animation variants
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -63,7 +63,7 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
         },
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: {
             opacity: 0,
             y: 30,
@@ -99,7 +99,7 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
                         whileHover={{
                             y: -8,
                             scale: 1.02,
-                            transition: { type: 'spring', stiffness: 300 }
+                            transition: { type: 'spring', stiffness: 300 } as const
                         }}
                         className="relative overflow-hidden backdrop-blur-xl bg-white/70 rounded-2xl shadow-xl border border-white/50 p-6 group"
                     >
@@ -121,7 +121,7 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
                                     <motion.div
                                         initial={{ scale: 0.8, opacity: 0 }}
                                         animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ delay: 0.3 + index * 0.15, type: 'spring' }}
+                                        transition={{ delay: 0.3 + index * 0.15, type: 'spring' as const }}
                                         className="text-3xl font-bold text-gray-900"
                                     >
                                         {stat.isPercentage ? (
@@ -144,7 +144,7 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
                                     animate={{ scale: 1, rotate: 0 }}
                                     transition={{
                                         delay: 0.4 + index * 0.15,
-                                        type: 'spring',
+                                        type: 'spring' as const,
                                         stiffness: 200,
                                     }}
                                     whileHover={{
@@ -165,8 +165,8 @@ export function QuickStats({ monthSpent, monthSaved, savingsRate }: QuickStatsPr
                                 className="flex items-center gap-3"
                             >
                                 <div className={`flex items-center gap-1 px-2.5 py-1 rounded-full ${stat.trend === 'up'
-                                        ? 'bg-emerald-100 text-emerald-700'
-                                        : 'bg-red-100 text-red-700'
+                                    ? 'bg-emerald-100 text-emerald-700'
+                                    : 'bg-red-100 text-red-700'
                                     }`}>
                                     <TrendIcon className="w-3.5 h-3.5" />
                                     <span className="text-xs font-bold">
