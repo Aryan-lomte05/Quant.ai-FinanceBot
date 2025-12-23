@@ -5,7 +5,8 @@ import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
-import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge"; // NEW
+import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
+import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel"; // NEW
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -15,7 +16,6 @@ export default function DashboardPage() {
   const [spendingData, setSpendingData] = useState<Array<{ date: string; amount: number }>>([]);
 
   useEffect(() => {
-    // Generate spending trend data from last 30 days
     const generateSpendingTrend = () => {
       const data = [];
       for (let i = 29; i >= 0; i--) {
@@ -72,12 +72,12 @@ export default function DashboardPage() {
 
       {/* Two Column Layout: Sparkline + Budget Gauge */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Spending Sparkline */}
         <SpendingSparkline data={spendingData} />
-
-        {/* NEW: Budget Health Gauge - Feature #4 */}
         <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
       </div>
+
+      {/* NEW: Upcoming Bills Carousel - Feature #5 */}
+      <UpcomingBillsCarousel />
 
       {/* Spending Chart */}
       <SpendingChart data={spendingData} />
