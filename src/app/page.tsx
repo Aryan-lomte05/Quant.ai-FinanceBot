@@ -8,7 +8,8 @@ import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
 import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel";
 import { SpendingDonutChart } from "@/components/dashboard/SpendingDonutChart";
-import { CashflowLineChart } from "@/components/dashboard/CashflowLineChart"; // NEW
+import { CashflowLineChart } from "@/components/dashboard/CashflowLineChart";
+import { BudgetProgressBars } from "@/components/dashboard/BudgetProgressBars";
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -86,7 +87,8 @@ export default function DashboardPage() {
 
       {/* NEW: Cashflow Line Chart - Feature #7 */}
       <CashflowLineChart />
-
+      {/* NEW: Budget Progress Bars - Feature #8 */}
+      <BudgetProgressBars />
       {/* Spending Chart */}
       <SpendingChart data={spendingData} />
 
