@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Header } from "@/components/layout/Header";
-import { MobileNav } from "@/components/layout/MobileNav";
-import { MockToggle } from "@/components/shared/MockToggle";
+import { Toaster as HotToaster } from "react-hot-toast";
 import { Toaster } from "@/components/ui/toaster";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,30 +20,37 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex h-screen bg-gray-50">
-          {/* Desktop Sidebar */}
-          <Sidebar className="hidden lg:flex" />
+        <ConditionalLayout>{children}</ConditionalLayout>
 
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Header */}
-            <Header />
+        {/* React Hot Toast */}
+        <HotToaster
+          position="top-right"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              background: '#fff',
+              color: '#374151',
+              borderRadius: '12px',
+              padding: '16px',
+              boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10B981',
+                secondary: '#fff',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#EF4444',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
 
-            {/* Page Content */}
-            <main className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6 pb-20 lg:pb-6">
-              {children}
-            </main>
-          </div>
-
-          {/* Mobile Bottom Navigation */}
-          <MobileNav className="lg:hidden" />
-
-          {/* Developer Mock Toggle */}
-          <MockToggle />
-
-          {/* Toaster Notifications */}
-          <Toaster />
-        </div>
+        {/* Shadcn Toast */}
+        <Toaster />
       </body>
     </html>
   );

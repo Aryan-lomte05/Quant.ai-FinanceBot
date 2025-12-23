@@ -7,13 +7,17 @@ import { BadgeGrid } from '@/components/gamification/BadgeGrid';
 import { ChallengeCard } from '@/components/gamification/ChallengeCard';
 import { Leaderboard } from '@/components/gamification/Leaderboard';
 import { BadgeUnlockModal } from '@/components/gamification/BadgeUnlockModal';
+import { AchievementUnlockModal } from '@/components/gamification/AchievementUnlockModal';
 import { Badge } from '@/lib/constants/achievements';
 import { Trophy, Target, Award, Users } from 'lucide-react';
 
 export default function GamificationPage() {
-    const { level, badges, challenges, addXP, updateChallengeProgress } = useGamificationStore();
+    const { level, badges, challenges, recentUnlocks, addXP, updateChallengeProgress, clearRecentUnlocks } = useGamificationStore();
     const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
     const [activeTab, setActiveTab] = useState<'challenges' | 'badges' | 'leaderboard'>('challenges');
+
+    // Get current unlock from recent unlocks
+    const currentUnlock = recentUnlocks[0] || null;
 
     const handleCompleteChallenge = (challengeId: string) => {
         const challenge = challenges.find(c => c.id === challengeId);
@@ -82,10 +86,17 @@ export default function GamificationPage() {
 
             {activeTab === 'leaderboard' && <Leaderboard />}
 
-            {/* Badge Detail Modal */}
+            {/* Badge Detail Modal (Your existing modal for viewing badge details) */}
             <BadgeUnlockModal
                 badge={selectedBadge}
                 onClose={() => setSelectedBadge(null)}
+            />
+
+            {/* Achievement Unlock Modal (NEW - Auto-triggers with confetti) */}
+            <AchievementUnlockModal
+                badge={currentUnlock}
+                isOpen={!!currentUnlock}
+                onClose={clearRecentUnlocks}
             />
         </div>
     );

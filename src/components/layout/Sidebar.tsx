@@ -13,6 +13,8 @@ import {
     Sparkles,
     Trophy,
     BookOpen,
+    User,
+    Users,
 } from "lucide-react";
 
 const navigation = [
@@ -22,8 +24,10 @@ const navigation = [
     { name: "Goals", href: "/goals", icon: Sparkles },
     { name: "Insights", href: "/insights", icon: TrendingUp },
     { name: "Achievements", href: "/gamification", icon: Trophy },
-    { name: "Learn Finance", href: "/literacy", icon: BookOpen }, // NEW
+    { name: "Learn Finance", href: "/literacy", icon: BookOpen },
     { name: "AI Chat", href: "/chat", icon: MessageCircle },
+    { name: "Friends", href: "/friends", icon: Users }, // NEW
+    { name: "Profile", href: "/profile", icon: User },
     { name: "Settings", href: "/settings", icon: Settings },
 ];
 
