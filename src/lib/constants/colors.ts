@@ -1,28 +1,27 @@
-// src/lib/constants/colors.ts
-
+// Budget Bandhu Color Palette
 export const colors = {
-    // Primary Colors (Hero actions, main elements)
+    // Primary Colors
     primary: {
-        mint: '#10B981',        // Main CTA, success states
-        mintLight: '#34D399',   // Hover states
-        mintDark: '#059669',    // Active states
-        mintBg: '#D1FAE5',      // Background tints
+        mint: '#10B981',
+        mintLight: '#34D399',
+        mintDark: '#059669',
+        mintBg: '#D1FAE5',
     },
 
     secondary: {
-        skyBlue: '#3B82F6',     // Info, trust elements
+        skyBlue: '#3B82F6',
         skyBlueLight: '#60A5FA',
         skyBlueDark: '#2563EB',
         skyBlueBg: '#DBEAFE',
     },
 
     accent: {
-        coral: '#F59E0B',       // Alerts, important actions
+        coral: '#F59E0B',
         coralLight: '#FBBF24',
         coralDark: '#D97706',
         coralBg: '#FEF3C7',
 
-        lavender: '#A78BFA',    // Premium features
+        lavender: '#A78BFA',
         lavenderLight: '#C4B5FD',
         lavenderDark: '#8B5CF6',
         lavenderBg: '#EDE9FE',
@@ -36,38 +35,38 @@ export const colors = {
         info: '#3B82F6',
     },
 
-    // Neutrals (Text, backgrounds)
+    // Neutrals
     neutral: {
         white: '#FFFFFF',
-        gray50: '#F9FAFB',      // Lightest bg
-        gray100: '#F3F4F6',     // Cards bg
-        gray200: '#E5E7EB',     // Borders
-        gray300: '#D1D5DB',     // Disabled states
-        gray400: '#9CA3AF',     // Placeholder text
-        gray500: '#6B7280',     // Secondary text
-        gray600: '#4B5563',     // Body text
-        gray700: '#374151',     // Headings
-        gray800: '#1F2937',     // Dark text
-        gray900: '#111827',     // Darkest
+        gray50: '#F9FAFB',
+        gray100: '#F3F4F6',
+        gray200: '#E5E7EB',
+        gray300: '#D1D5DB',
+        gray400: '#9CA3AF',
+        gray500: '#6B7280',
+        gray600: '#4B5563',
+        gray700: '#374151',
+        gray800: '#1F2937',
+        gray900: '#111827',
     },
 
-    // Category Colors (For transaction categories)
+    // Category Colors
     categories: {
-        food: '#F59E0B',        // Coral
-        transport: '#3B82F6',   // Sky Blue
-        shopping: '#A78BFA',    // Lavender
-        bills: '#10B981',       // Mint
-        entertainment: '#EC4899', // Pink
-        groceries: '#84CC16',   // Lime
-        healthcare: '#EF4444',  // Red
-        education: '#8B5CF6',   // Purple
-        emi: '#6366F1',        // Indigo
-        insurance: '#14B8A6',   // Teal
-        investments: '#10B981', // Mint
-        travel: '#06B6D4',     // Cyan
-        personal: '#F97316',   // Orange
-        gifts: '#EC4899',      // Pink
-        others: '#6B7280',     // Gray
+        food: '#F59E0B',
+        transport: '#3B82F6',
+        shopping: '#A78BFA',
+        bills: '#10B981',
+        entertainment: '#EC4899',
+        groceries: '#84CC16',
+        healthcare: '#EF4444',
+        education: '#8B5CF6',
+        emi: '#6366F1',
+        insurance: '#14B8A6',
+        investments: '#10B981',
+        travel: '#06B6D4',
+        personal: '#F97316',
+        gifts: '#EC4899',
+        others: '#6B7280',
     },
 
     // Gradients
@@ -80,3 +79,12 @@ export const colors = {
 } as const;
 
 export type ColorPalette = typeof colors;
+
+// Helper functions
+export function getCategoryColor(category: string): string {
+    return colors.categories[category.toLowerCase() as keyof typeof colors.categories] || colors.categories.others;
+}
+
+export function getGradient(type: keyof typeof colors.gradients): string {
+    return colors.gradients[type];
+}
