@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
+import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline"; // NEW
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -67,6 +68,9 @@ export default function DashboardPage() {
         monthSaved={dashboardData.monthSaved}
         savingsRate={dashboardData.savingsRate}
       />
+
+      {/* NEW: Spending Sparkline - Feature #3 */}
+      <SpendingSparkline data={spendingData} />
 
       {/* Spending Chart */}
       <SpendingChart data={spendingData} />
