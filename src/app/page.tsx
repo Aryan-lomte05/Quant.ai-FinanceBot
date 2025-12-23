@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { QuickStats } from "@/components/dashboard/QuickStats";
 import { SpendingChart } from "@/components/dashboard/SpendingChart";
-import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline"; // NEW
+import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
+import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge"; // NEW
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
@@ -22,7 +23,7 @@ export default function DashboardPage() {
         date.setDate(date.getDate() - i);
         data.push({
           date: date.toLocaleDateString("en-IN", { day: "2-digit", month: "short" }),
-          amount: Math.floor(Math.random() * 2000) + 500, // Random spending
+          amount: Math.floor(Math.random() * 2000) + 500,
         });
       }
       return data;
@@ -69,13 +70,19 @@ export default function DashboardPage() {
         savingsRate={dashboardData.savingsRate}
       />
 
-      {/* NEW: Spending Sparkline - Feature #3 */}
-      <SpendingSparkline data={spendingData} />
+      {/* Two Column Layout: Sparkline + Budget Gauge */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Spending Sparkline */}
+        <SpendingSparkline data={spendingData} />
+
+        {/* NEW: Budget Health Gauge - Feature #4 */}
+        <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
+      </div>
 
       {/* Spending Chart */}
       <SpendingChart data={spendingData} />
 
-      {/* AI Insights Preview (Coming Next) */}
+      {/* AI Insights Preview */}
       <div className="glass p-6 rounded-2xl border-2 border-white/50">
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 bg-lavender-100 rounded-xl flex items-center justify-center">
