@@ -15,6 +15,7 @@ import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { EmergencyFundBarometer } from "@/components/dashboard/EmergencyFundBarometer";
 import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
+import { FinancialTimeMachine } from "@/components/dashboard/FinancialTimeMachine";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
@@ -95,7 +96,8 @@ export default function DashboardPage() {
       <EmergencyFundBarometer />
       {/* NEW: Spending Insights - Feature #10 */}
       <SpendingInsights />
-
+      {/* NEW: Financial Time Machine - Feature #11 */}
+      <FinancialTimeMachine />
 
 
 
