@@ -13,6 +13,7 @@ import { BudgetProgressBars } from "@/components/dashboard/BudgetProgressBars";
 import { mockData } from "@/lib/api/mock-data";
 import { Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { EmergencyFundBarometer } from "@/components/dashboard/EmergencyFundBarometer";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
@@ -89,8 +90,9 @@ export default function DashboardPage() {
       <CashflowLineChart />
       {/* NEW: Budget Progress Bars - Feature #8 */}
       <BudgetProgressBars />
-      {/* Spending Chart */}
-      <SpendingChart data={spendingData} />
+      {/* NEW: Emergency Fund Barometer - Feature #9 */}
+      <EmergencyFundBarometer />
+
 
       {/* AI Insights Preview */}
       <div className="glass p-6 rounded-2xl border-2 border-white/50">
