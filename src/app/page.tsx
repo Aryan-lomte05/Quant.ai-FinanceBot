@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { EmergencyFundBarometer } from "@/components/dashboard/EmergencyFundBarometer";
 import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
 import { FinancialTimeMachine } from "@/components/dashboard/FinancialTimeMachine";
+import { TaxOptimizerDashboard } from "@/components/dashboard/TaxOptimizerDashboard";
 
 export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
@@ -98,6 +99,10 @@ export default function DashboardPage() {
       <SpendingInsights />
       {/* NEW: Financial Time Machine - Feature #11 */}
       <FinancialTimeMachine />
+      {/* NEW: Tax Optimizer Dashboard - Feature #12 */}
+      <TaxOptimizerDashboard />
+
+
 
 
 
