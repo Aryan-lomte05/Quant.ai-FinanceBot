@@ -1,65 +1,92 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import { BalanceCard } from "@/components/dashboard/BalanceCard";
+import { QuickStats } from "@/components/dashboard/QuickStats";
+import { SpendingChart } from "@/components/dashboard/SpendingChart";
+import { mockData } from "@/lib/api/mock-data";
+import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function DashboardPage() {
+  const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
+  const [spendingData, setSpendingData] = useState<Array<{ date: string; amount: number }>>([]);
+
+  useEffect(() => {
+    // Generate spending trend data from last 30 days
+    const generateSpendingTrend = () => {
+      const data = [];
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        data.push({
+          date: date.toLocaleDateString("en-IN", { day: "2-digit", month: "short" }),
+          amount: Math.floor(Math.random() * 2000) + 500, // Random spending
+        });
+      }
+      return data;
+    };
+
+    setSpendingData(generateSpendingTrend());
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Welcome Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between"
+      >
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Good evening, Aryan! 👋
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-gray-600">
+            Here's your financial snapshot for today
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="hidden md:block">
+          <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-mint-500 to-skyBlue-500 text-white rounded-xl">
+            <Sparkles className="w-5 h-5" />
+            <span className="font-semibold">Financial Score: 782</span>
+          </div>
         </div>
-      </main>
+      </motion.div>
+
+      {/* Balance Card */}
+      <BalanceCard
+        balance={dashboardData.currentBalance}
+        trend={dashboardData.trend.balance as "up" | "down"}
+        trendPercentage={12}
+      />
+
+      {/* Quick Stats */}
+      <QuickStats
+        monthSpent={dashboardData.monthSpent}
+        monthSaved={dashboardData.monthSaved}
+        savingsRate={dashboardData.savingsRate}
+      />
+
+      {/* Spending Chart */}
+      <SpendingChart data={spendingData} />
+
+      {/* AI Insights Preview (Coming Next) */}
+      <div className="glass p-6 rounded-2xl border-2 border-white/50">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 bg-lavender-100 rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-lavender-600" />
+          </div>
+          <div>
+            <h3 className="font-bold text-gray-900">AI Insights</h3>
+            <p className="text-sm text-gray-600">Powered by Phi-3.5</p>
+          </div>
+        </div>
+        <p className="text-gray-700">
+          💡 You're on track to save <strong>₹45,600</strong> in the next 90 days!
+          Consider allocating more to your Europe Trip goal.
+        </p>
+      </div>
     </div>
   );
 }
