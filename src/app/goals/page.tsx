@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import { useConfetti } from "@/lib/hooks/useConfetti";
-import { useFireworks } from "@/lib/hooks/useFireworks"; // NEW
-import { FireworksEffect } from "@/components/animations/FireworksEffect"; // NEW
+import { useFireworks } from "@/lib/hooks/useFireworks";
+import { useBalloons } from "@/lib/hooks/useBalloons"; // NEW
+import { FireworksEffect } from "@/components/animations/FireworksEffect";
+import { Balloons } from "@/components/animations/Balloons"; // NEW
 
 export interface Goal {
     id: string;
@@ -30,27 +32,53 @@ export interface Goal {
 export default function GoalsPage() {
     const [goals, setGoals] = useState<Goal[]>(mockData.goals as unknown as Goal[]);
     const { fireCelebration, fireConfetti } = useConfetti();
-    const { isActive: fireworksActive, launch: launchFireworks } = useFireworks(); // NEW
+    const { isActive: fireworksActive, launch: launchFireworks } = useFireworks();
+    const { isActive: balloonsActive, launch: launchBalloons } = useBalloons(); // NEW
 
     const totalTarget = goals.reduce((acc, g) => acc + g.target, 0);
     const totalCurrent = goals.reduce((acc, g) => acc + g.current, 0);
     const overallProgress = (totalCurrent / totalTarget) * 100;
+
+    // Helper to check if milestone was just reached
+    const checkMilestones = (goal: Goal, oldCurrent: number, newCurrent: number) => {
+        const milestones = [25, 50, 75]; // 25%, 50%, 75% milestones
+
+        for (const milestone of milestones) {
+            const milestoneAmount = (goal.target * milestone) / 100;
+            const oldPercentage = (oldCurrent / goal.target) * 100;
+            const newPercentage = (newCurrent / goal.target) * 100;
+
+            // Check if we just crossed this milestone
+            if (oldPercentage < milestone && newPercentage >= milestone) {
+                return milestone;
+            }
+        }
+        return null;
+    };
 
     // Handle adding money to goals
     const handleAddMoney = (goalId: string, amount: number) => {
         setGoals(prev => {
             const updated = prev.map(goal => {
                 if (goal.id === goalId) {
+                    const oldCurrent = goal.current;
                     const newCurrent = goal.current + amount;
                     const oldPercentage = (goal.current / goal.target) * 100;
                     const newPercentage = (newCurrent / goal.target) * 100;
+
+                    // NEW: Check for milestone achievements
+                    const milestoneReached = checkMilestones(goal, oldCurrent, newCurrent);
+                    if (milestoneReached) {
+                        // Milestone reached! Launch balloons 🎈
+                        setTimeout(() => launchBalloons(5000), 200);
+                    }
 
                     // Check if goal just completed
                     if (newPercentage >= 100 && oldPercentage < 100) {
                         // Goal completed! Fire celebration confetti
                         setTimeout(() => fireCelebration(), 300);
 
-                        // NEW: Check if ALL goals are now complete
+                        // Check if ALL goals are now complete
                         const allComplete = prev.every(g =>
                             g.id === goalId ? newCurrent >= goal.target : g.current >= g.target
                         );
@@ -59,8 +87,8 @@ export default function GoalsPage() {
                             // ALL GOALS COMPLETE! Launch epic fireworks! 🎆
                             setTimeout(() => launchFireworks(8000), 1200);
                         }
-                    } else {
-                        // Regular contribution - small confetti
+                    } else if (!milestoneReached) {
+                        // Regular contribution - small confetti (only if no milestone)
                         fireConfetti({
                             particleCount: 50,
                             spread: 50,
@@ -189,8 +217,9 @@ export default function GoalsPage() {
                 </div>
             </div>
 
-            {/* NEW: Fireworks Animation */}
+            {/* Animations */}
             <FireworksEffect isActive={fireworksActive} duration={8000} />
+            <Balloons isActive={balloonsActive} duration={5000} count={15} /> {/* NEW */}
         </>
     );
 }
