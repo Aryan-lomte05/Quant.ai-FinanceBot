@@ -7,12 +7,58 @@ import { Target, Trophy, TrendingUp, Plus, Info, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
+import { useConfetti } from "@/lib/hooks/useConfetti"; // NEW
+
+export interface Goal {
+    id: string;
+    name: string;
+    icon: string;
+    target: number;
+    current: number;
+    deadline: string;
+    priority: string;
+    color: string;
+    milestones: Array<{
+        amount: number;
+        reached: boolean;
+        date: string | null;
+    }>;
+}
 
 export default function GoalsPage() {
-    const goals = mockData.goals;
+    const [goals, setGoals] = useState<Goal[]>(mockData.goals as unknown as Goal[]);
+    const { fireCelebration, fireConfetti } = useConfetti(); // NEW
+
     const totalTarget = goals.reduce((acc, g) => acc + g.target, 0);
     const totalCurrent = goals.reduce((acc, g) => acc + g.current, 0);
     const overallProgress = (totalCurrent / totalTarget) * 100;
+
+    // NEW: Handle adding money to goals
+    const handleAddMoney = (goalId: string, amount: number) => {
+        setGoals(prev => prev.map(goal => {
+            if (goal.id === goalId) {
+                const newCurrent = goal.current + amount;
+                const oldPercentage = (goal.current / goal.target) * 100;
+                const newPercentage = (newCurrent / goal.target) * 100;
+
+                // Check if goal just completed
+                if (newPercentage >= 100 && oldPercentage < 100) {
+                    // Goal completed! Fire celebration
+                    setTimeout(() => fireCelebration(), 300);
+                } else {
+                    // Regular contribution - small confetti
+                    fireConfetti({
+                        particleCount: 50,
+                        spread: 50,
+                        origin: { x: 0.5, y: 0.7 },
+                    });
+                }
+
+                return { ...goal, current: Math.min(newCurrent, goal.target) };
+            }
+            return goal;
+        }));
+    };
 
     return (
         <div className="space-y-6 max-w-5xl mx-auto pb-10">
@@ -95,7 +141,11 @@ export default function GoalsPage() {
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ delay: index * 0.1 }}
                     >
-                        <GoalCard goal={goal as any} />
+                        {/* NEW: Pass handleAddMoney to GoalCard */}
+                        <GoalCard
+                            goal={goal}
+                            onAddMoney={handleAddMoney}
+                        />
                     </motion.div>
                 ))}
             </div>
