@@ -9,9 +9,10 @@ import { motion } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import { useConfetti } from "@/lib/hooks/useConfetti";
 import { useFireworks } from "@/lib/hooks/useFireworks";
-import { useBalloons } from "@/lib/hooks/useBalloons"; // NEW
+import { useBalloons } from "@/lib/hooks/useBalloons";
 import { FireworksEffect } from "@/components/animations/FireworksEffect";
-import { Balloons } from "@/components/animations/Balloons"; // NEW
+import { useXPTriggers } from "@/lib/hooks/useXPTriggers"; // NEW
+import { Balloons } from "@/components/animations/Balloons";
 
 export interface Goal {
     id: string;
@@ -33,7 +34,8 @@ export default function GoalsPage() {
     const [goals, setGoals] = useState<Goal[]>(mockData.goals as unknown as Goal[]);
     const { fireCelebration, fireConfetti } = useConfetti();
     const { isActive: fireworksActive, launch: launchFireworks } = useFireworks();
-    const { isActive: balloonsActive, launch: launchBalloons } = useBalloons(); // NEW
+    const { isActive: balloonsActive, launch: launchBalloons } = useBalloons();
+    const { onGoalContribution, onGoalCompleted } = useXPTriggers(); // NEW
 
     const totalTarget = goals.reduce((acc, g) => acc + g.target, 0);
     const totalCurrent = goals.reduce((acc, g) => acc + g.current, 0);
@@ -66,7 +68,10 @@ export default function GoalsPage() {
                     const oldPercentage = (goal.current / goal.target) * 100;
                     const newPercentage = (newCurrent / goal.target) * 100;
 
-                    // NEW: Check for milestone achievements
+                    // NEW: Award XP for contribution (1 XP per ₹1000)
+                    onGoalContribution(amount);
+
+                    // Check for milestone achievements
                     const milestoneReached = checkMilestones(goal, oldCurrent, newCurrent);
                     if (milestoneReached) {
                         // Milestone reached! Launch balloons 🎈
@@ -75,6 +80,9 @@ export default function GoalsPage() {
 
                     // Check if goal just completed
                     if (newPercentage >= 100 && oldPercentage < 100) {
+                        // NEW: Award 100 XP for goal completion
+                        setTimeout(() => onGoalCompleted(), 500);
+
                         // Goal completed! Fire celebration confetti
                         setTimeout(() => fireCelebration(), 300);
 
@@ -219,7 +227,7 @@ export default function GoalsPage() {
 
             {/* Animations */}
             <FireworksEffect isActive={fireworksActive} duration={8000} />
-            <Balloons isActive={balloonsActive} duration={5000} count={15} /> {/* NEW */}
+            <Balloons isActive={balloonsActive} duration={5000} count={15} />
         </>
     );
 }
