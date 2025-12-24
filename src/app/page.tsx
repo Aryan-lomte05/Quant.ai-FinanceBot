@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { BalanceCard } from "@/components/dashboard/BalanceCard";
 import { QuickStats } from "@/components/dashboard/QuickStats";
-import { SpendingChart } from "@/components/dashboard/SpendingChart";
+
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
 import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel";
@@ -101,10 +101,6 @@ export default function DashboardPage() {
       <FinancialTimeMachine />
       {/* NEW: Tax Optimizer Dashboard - Feature #12 */}
       <TaxOptimizerDashboard />
-
-
-
-
 
     </div>
   );
