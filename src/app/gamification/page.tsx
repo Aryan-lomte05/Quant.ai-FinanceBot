@@ -8,16 +8,19 @@ import { ChallengeCard } from '@/components/gamification/ChallengeCard';
 import { Leaderboard } from '@/components/gamification/Leaderboard';
 import { BadgeUnlockModal } from '@/components/gamification/BadgeUnlockModal';
 import { AchievementUnlockModal } from '@/components/gamification/AchievementUnlockModal';
+import { LevelUpModal } from '@/components/gamification/LevelUpModal'; // NEW
 import { Badge } from '@/lib/constants/achievements';
 import { FireworksEffect } from '@/components/animations/FireworksEffect';
 import { useFireworks } from '@/lib/hooks/useFireworks';
+import { useLevelUp } from '@/lib/hooks/useLevelUp'; // NEW
 import { Trophy, Target, Award, Users } from 'lucide-react';
 
 export default function GamificationPage() {
     const { level, badges, challenges, recentUnlocks, addXP, updateChallengeProgress, clearRecentUnlocks } = useGamificationStore();
     const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
     const [activeTab, setActiveTab] = useState<'challenges' | 'badges' | 'leaderboard'>('challenges');
-    const { isActive: fireworksActive, launch: launchFireworks } = useFireworks(); // NEW
+    const { isActive: fireworksActive, launch: launchFireworks } = useFireworks();
+    const { showModal: showLevelUpModal, levelData, closeModal: closeLevelUpModal } = useLevelUp(); // NEW
 
     // Get current unlock from recent unlocks
     const currentUnlock = recentUnlocks[0] || null;
@@ -66,8 +69,8 @@ export default function GamificationPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
                             className={`px-6 py-3 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${activeTab === tab.id
-                                ? 'bg-gradient-to-r from-mint-500 to-skyBlue-500 text-white shadow-lg'
-                                : 'text-gray-600 hover:bg-gray-100'
+                                    ? 'bg-gradient-to-r from-mint-500 to-skyBlue-500 text-white shadow-lg'
+                                    : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
                             <tab.icon className="w-4 h-4" />
@@ -117,7 +120,17 @@ export default function GamificationPage() {
                 />
             </div>
 
-            {/* NEW: Fireworks Animation */}
+            {/* NEW: Level Up Modal */}
+            <LevelUpModal
+                isOpen={showLevelUpModal}
+                onClose={closeLevelUpModal}
+                newLevel={levelData.newLevel}
+                xpEarned={levelData.xpEarned}
+                xpToNextLevel={levelData.xpToNextLevel}
+                rewards={levelData.rewards}
+            />
+
+            {/* Fireworks Animation */}
             <FireworksEffect isActive={fireworksActive} duration={6000} />
         </>
     );
