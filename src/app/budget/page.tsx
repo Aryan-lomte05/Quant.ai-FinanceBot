@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { CategoryAllocation } from "@/components/budget/CategoryAllocation";
 import { ComparisonChart } from "@/components/budget/ComparisonChart";
 import { BudgetSlider } from "@/components/budget/BudgetSlider";
+import { Logo3D } from "@/components/shared/Logo3D";
 import { mockData } from "@/lib/api/mock-data";
-import { Target, TrendingDown, IndianRupee, PieChart, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { Target, TrendingDown, IndianRupee, PieChart, Sparkles, TrendingUp } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 
 export default function BudgetPage() {
@@ -17,119 +17,204 @@ export default function BudgetPage() {
     const savingsRate = ((budgetData.totalIncome - totalSpent) / budgetData.totalIncome) * 100;
     const [adjustmentValue, setAdjustmentValue] = useState(2500);
 
+    // Scroll zoom animations for sections
+    const heroSectionRef = useRef<HTMLDivElement>(null);
+    const cardsSectionRef = useRef<HTMLDivElement>(null);
+
+    const { scrollYProgress: heroProgress } = useScroll({
+        target: heroSectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const heroTextScale = useSpring(
+        useTransform(heroProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
+        { stiffness: 100, damping: 30 }
+    );
+    const heroTextOpacity = useTransform(heroProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
+
+    const { scrollYProgress: cardsProgress } = useScroll({
+        target: cardsSectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const cardsScale = useSpring(
+        useTransform(cardsProgress, [0, 0.5, 1], [0.95, 0.98, 1.0]),
+        { stiffness: 100, damping: 30 }
+    );
+
     return (
-        <div className="space-y-6 max-w-5xl mx-auto pb-10">
-            {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Budgeting</h1>
-                    <p className="text-gray-600 mt-1">Manage your limits and optimize savings</p>
-                </div>
-                <Button className="gap-2 bg-gradient-to-r from-mint-600 to-skyBlue-600 hover:from-mint-700 hover:to-skyBlue-700">
-                    <Target className="w-4 h-4" />
-                    Reset Monthly Budget
-                </Button>
-            </div>
+        <>
+            {/* Fullscreen 3D Logo Canvas */}
+            <Logo3D />
 
-            {/* Quick Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <motion.div
-                    whileHover={{ y: -5 }}
-                    className="glass p-5 rounded-2xl border border-white/50 flex flex-col gap-3"
-                >
-                    <div className="w-10 h-10 bg-mint-100 rounded-xl flex items-center justify-center text-mint-600">
-                        <IndianRupee className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Total Spent</p>
-                        <h2 className="text-2xl font-bold text-gray-900">{formatCurrency(totalSpent)}</h2>
-                    </div>
-                    <div className="text-xs text-gray-500">
-                        Out of {formatCurrency(budgetData.totalIncome)} income
-                    </div>
-                </motion.div>
+            <div className="space-y-0">
+                {/* SECTION 1: Hero - Mint Background */}
+                <section ref={heroSectionRef} className="mm-section-mint mm-section-spacing relative perspective-container overflow-hidden">
+                    {/* Logo Target */}
+                    <div data-logo-target="hero" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 pointer-events-none z-10" />
 
-                <motion.div
-                    whileHover={{ y: -5 }}
-                    className="glass p-5 rounded-2xl border border-white/50 flex flex-col gap-3"
-                >
-                    <div className="w-10 h-10 bg-skyBlue-100 rounded-xl flex items-center justify-center text-skyBlue-600">
-                        <TrendingDown className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Safe to Spend</p>
-                        <h2 className="text-2xl font-bold text-gray-900">{formatCurrency(totalAllocated - totalSpent)}</h2>
-                    </div>
-                    <div className="text-xs text-mint-600 font-semibold">
-                        You're {((totalSpent / totalAllocated) * 100).toFixed(0)}% through your budget
-                    </div>
-                </motion.div>
+                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                        {/* Massive Headline */}
+                        <motion.div
+                            style={{
+                                scale: heroTextScale,
+                                opacity: heroTextOpacity
+                            }}
+                            className="mb-16"
+                        >
+                            <h1 className="mm-section-heading text-center">
+                                YOUR BUDGET
+                                <br />
+                                UNDER CONTROL
+                            </h1>
+                            <p className="text-center text-xl text-gray-700 mt-6 max-w-2xl mx-auto">
+                                Manage your limits and optimize your savings with AI-powered insights
+                            </p>
+                        </motion.div>
 
-                <motion.div
-                    whileHover={{ y: -5 }}
-                    className="glass p-5 rounded-2xl border border-white/50 flex flex-col gap-3"
-                >
-                    <div className="w-10 h-10 bg-lavender-100 rounded-xl flex items-center justify-center text-lavender-600">
-                        <TrendingDown className="w-5 h-5" />
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Savings Rate</p>
-                        <h2 className="text-2xl font-bold text-gray-900">{savingsRate.toFixed(1)}%</h2>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs text-mint-600 font-semibold">
-                        <Sparkles className="w-3 h-3" />
-                    </div>
-                </motion.div>
-            </div>
+                        {/* Quick Stats - Asymmetric Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <motion.div
+                                initial={{ opacity: 0, y: 60 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card mm-card-medium card-3d"
+                            >
+                                <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
+                                    <IndianRupee className="w-8 h-8 text-mm-purple" />
+                                </div>
+                                <p className="text-sm text-gray-600 font-semibold uppercase tracking-wide mb-2">Total Spent</p>
+                                <h2 className="text-4xl font-black text-mm-purple mb-3">{formatCurrency(totalSpent)}</h2>
+                                <p className="text-sm text-gray-500">
+                                    Out of {formatCurrency(budgetData.totalIncome)} income
+                                </p>
+                            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Budget vs Actual Chart */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="flex items-center gap-2 mb-6">
-                        <PieChart className="w-5 h-5 text-mint-500" />
-                        <h3 className="font-bold text-gray-900">Spending vs Budget</h3>
-                    </div>
-                    <ComparisonChart />
-                </div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 60 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card-colored mm-card-green mm-card-medium card-3d"
+                            >
+                                <div className="text-6xl mb-4">💰</div>
+                                <p className="text-sm font-semibold uppercase tracking-wide mb-2">Safe to Spend</p>
+                                <h2 className="text-4xl font-black mb-3">{formatCurrency(totalAllocated - totalSpent)}</h2>
+                                <div className="flex items-center gap-2">
+                                    <TrendingUp className="w-4 h-4" />
+                                    <span className="text-sm font-semibold">
+                                        {((totalSpent / totalAllocated) * 100).toFixed(0)}% through budget
+                                    </span>
+                                </div>
+                            </motion.div>
 
-                {/* Category Allocations */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-2">
-                            <Target className="w-5 h-5 text-skyBlue-500" />
-                            <h3 className="font-bold text-gray-900">Category Limits</h3>
+                            <motion.div
+                                initial={{ opacity: 0, y: 60 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card mm-card-medium card-3d bg-gradient-to-br from-mm-purple to-mm-lavender text-white"
+                            >
+                                <Sparkles className="w-12 h-12 mb-6" />
+                                <p className="text-sm font-semibold uppercase tracking-wide mb-2 opacity-90">Savings Rate</p>
+                                <h2 className="text-5xl font-black mb-3">{savingsRate.toFixed(1)}%</h2>
+                                <p className="text-sm opacity-90">Excellent performance! 🎯</p>
+                            </motion.div>
                         </div>
-                        <button className="text-sm text-skyBlue-600 font-semibold hover:underline">
-                            Edit All
-                        </button>
                     </div>
-                    <CategoryAllocation allocations={budgetData.allocations as any} />
-                </div>
-            </div>
+                </section>
 
-            {/* Smart Budget Adjustment Tool */}
-            <div className="bg-gradient-to-r from-mint-500/10 to-skyBlue-500/10 p-8 rounded-3xl border border-white overflow-hidden relative">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                    <Sparkles className="w-32 h-32" />
-                </div>
-                <div className="max-w-xl space-y-4">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-white rounded-full text-xs font-bold text-mint-600 shadow-sm">
-                        <Sparkles className="w-3 h-3" />
-                        AI RECOMMENDED ADJUSTMENT
+                {/* SECTION 2: Charts & Allocations - Cream Background */}
+                <section ref={cardsSectionRef} className="mm-section-cream mm-section-spacing relative">
+                    {/* Logo Target */}
+                    <div data-logo-target="card" className="absolute left-1/4 top-1/3 -translate-x-1/2 w-64 h-64 pointer-events-none z-10" />
+
+                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Budget vs Actual Chart */}
+                            <motion.div
+                                style={{ scale: cardsScale }}
+                                initial={{ opacity: 0, x: -60 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card card-3d"
+                            >
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-12 h-12 bg-mm-green/10 rounded-xl flex items-center justify-center">
+                                        <PieChart className="w-6 h-6 text-mm-green" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-mm-black">Spending vs Budget</h3>
+                                </div>
+                                <ComparisonChart />
+                            </motion.div>
+
+                            {/* Category Allocations */}
+                            <motion.div
+                                style={{ scale: cardsScale }}
+                                initial={{ opacity: 0, x: 60 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card card-3d"
+                            >
+                                <div className="flex items-center justify-between mb-6">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-12 h-12 bg-mm-purple/10 rounded-xl flex items-center justify-center">
+                                            <Target className="w-6 h-6 text-mm-purple" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-mm-black">Category Limits</h3>
+                                    </div>
+                                    <button className="mm-btn-secondary text-sm">Edit All</button>
+                                </div>
+                                <CategoryAllocation allocations={budgetData.allocations as any} />
+                            </motion.div>
+                        </div>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-900">Optimize your monthly savings</h2>
-                    <p className="text-gray-600">
-                        Based on your spending patterns, we suggest reducing "Food & Dining" by 10% and allocating it to your "Emergency Fund".
-                    </p>
-                    <div className="pt-4">
-                        <BudgetSlider
-                            label="Emergency Fund Adjustment"
-                            value={adjustmentValue}
-                            onChange={setAdjustmentValue}
-                        />
+                </section>
+
+                {/* SECTION 3: AI Optimization - Orange Background */}
+                <section className="mm-section-orange mm-section-spacing relative">
+                    {/* Logo Target */}
+                    <div data-logo-target="cta" className="absolute right-1/4 top-1/2 -translate-y-1/2 w-48 h-48 pointer-events-none z-10" />
+
+                    <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto text-center">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm font-bold text-mm-purple shadow-lg mb-6">
+                                <Sparkles className="w-4 h-4" />
+                                AI RECOMMENDED ADJUSTMENT
+                            </div>
+
+                            <h2 className="text-5xl md:text-6xl font-black text-mm-black mb-6 leading-tight">
+                                Optimize Your
+                                <br />
+                                Monthly Savings
+                            </h2>
+
+                            <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+                                Based on your spending patterns, we suggest reducing "Food & Dining" by 10% and allocating it to your "Emergency Fund".
+                            </p>
+
+                            <div className="bg-white p-8 rounded-3xl shadow-xl max-w-xl mx-auto">
+                                <BudgetSlider
+                                    label="Emergency Fund Adjustment"
+                                    value={adjustmentValue}
+                                    onChange={setAdjustmentValue}
+                                />
+                                <button className="mm-btn mm-btn-primary w-full mt-6 text-lg">
+                                    Apply Changes
+                                </button>
+                            </div>
+                        </motion.div>
                     </div>
-                </div>
+                </section>
             </div>
-        </div>
+        </>
     );
 }

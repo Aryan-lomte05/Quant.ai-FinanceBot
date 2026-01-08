@@ -41,7 +41,7 @@ export function TopNavigation() {
     const isActive = (href: string) => pathname === href;
 
     return (
-        <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+        <nav className="sticky top-0 z-[100] bg-white shadow-sm border-b border-gray-100">
             <div className="mm-container">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
@@ -96,8 +96,8 @@ export function TopNavigation() {
                                     <Link
                                         href={item.href}
                                         className={`flex items-center gap-2 px-4 py-2 rounded-full transition-colors ${isActive(item.href)
-                                                ? 'bg-mm-purple text-white'
-                                                : 'text-mm-black hover:bg-gray-50'
+                                            ? 'bg-mm-purple text-white'
+                                            : 'text-mm-black hover:bg-gray-50'
                                             }`}
                                     >
                                         {item.icon && <item.icon className="w-4 h-4" />}
@@ -186,8 +186,8 @@ export function TopNavigation() {
                                             href={item.href}
                                             onClick={() => setMobileMenuOpen(false)}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${isActive(item.href)
-                                                    ? 'bg-mm-purple text-white'
-                                                    : 'text-mm-black hover:bg-gray-50'
+                                                ? 'bg-mm-purple text-white'
+                                                : 'text-mm-black hover:bg-gray-50'
                                                 }`}
                                         >
                                             {item.icon && <item.icon className="w-5 h-5" />}
