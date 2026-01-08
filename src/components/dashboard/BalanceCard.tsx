@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, EyeOff, TrendingUp, TrendingDown, Wallet, ArrowUpRight, CreditCard, PiggyBank } from 'lucide-react';
+import { Eye, EyeOff, TrendingUp, ArrowUpRight, Send, Plus, } from 'lucide-react';
 import { NumericFormat } from 'react-number-format';
 
 interface BalanceCardProps {
@@ -18,172 +18,107 @@ export function BalanceCard({ balance, trend, trendPercentage }: BalanceCardProp
         <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 rounded-3xl shadow-2xl border border-white/20 p-8 text-white"
+            className="mm-card"
         >
-            {/* Animated Background Particles */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
-                {[...Array(15)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute rounded-full bg-white"
-                        style={{
-                            width: Math.random() * 80 + 40,
-                            height: Math.random() * 80 + 40,
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                            y: [0, -25, 0],
-                            x: [0, 12, 0],
-                            scale: [1, 1.15, 1],
-                        }}
-                        transition={{
-                            duration: Math.random() * 5 + 5,
-                            repeat: Infinity,
-                            ease: 'easeInOut',
-                        }}
-                    />
-                ))}
-            </div>
-
-            <div className="relative z-10">
-                {/* Main Balance Section */}
-                <div className="flex items-start justify-between mb-6">
-                    <div className="flex-1">
-                        <p className="text-white/80 text-sm mb-2 font-medium">Total Balance</p>
-
-                        <div className="flex items-center gap-3 mb-3">
-                            <AnimatePresence mode="wait">
-                                {showBalance ? (
-                                    <motion.div
-                                        key="visible"
-                                        initial={{ scale: 0.9, opacity: 0, filter: 'blur(10px)' }}
-                                        animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
-                                        exit={{ scale: 0.9, opacity: 0, filter: 'blur(10px)' }}
-                                        transition={{ duration: 0.3 }}
-                                        className="text-5xl font-bold"
-                                    >
-                                        <NumericFormat
-                                            value={balance}
-                                            displayType="text"
-                                            thousandSeparator=","
-                                            prefix="₹"
-                                            renderText={(value) => <span>{value}</span>}
-                                        />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="hidden"
-                                        initial={{ scale: 0.9, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0.9, opacity: 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="text-5xl font-bold tracking-wider"
-                                    >
-                                        ₹●●●,●●●
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            <motion.button
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                                onClick={() => setShowBalance(!showBalance)}
-                                className="w-11 h-11 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors flex items-center justify-center shadow-lg"
-                            >
-                                <AnimatePresence mode="wait">
-                                    {showBalance ? (
-                                        <motion.div
-                                            key="eye-off"
-                                            initial={{ rotate: -90, opacity: 0 }}
-                                            animate={{ rotate: 0, opacity: 1 }}
-                                            exit={{ rotate: 90, opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <EyeOff className="w-5 h-5" />
-                                        </motion.div>
-                                    ) : (
-                                        <motion.div
-                                            key="eye"
-                                            initial={{ rotate: -90, opacity: 0 }}
-                                            animate={{ rotate: 0, opacity: 1 }}
-                                            exit={{ rotate: 90, opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                        >
-                                            <Eye className="w-5 h-5" />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                            </motion.button>
+            <div className="space-y-6">
+                {/* Header with Wallet Icon and Title */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-mm-purple rounded-xl flex items-center justify-center">
+                            <span className="text-2xl">💼</span>
                         </div>
-
-                        {/* Trend Indicator */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="flex items-center gap-2"
-                        >
-                            <div className={`flex items-center gap-1 px-3 py-1.5 rounded-full ${trend === 'up'
-                                ? 'bg-green-400/20 text-green-100'
-                                : 'bg-red-400/20 text-red-100'
-                                }`}>
-                                {trend === 'up' ? (
-                                    <TrendingUp className="w-4 h-4" />
-                                ) : (
-                                    <TrendingDown className="w-4 h-4" />
-                                )}
-                                <span className="text-sm font-semibold">
-                                    {trend === 'up' ? '+' : '-'}{trendPercentage}%
-                                </span>
-                            </div>
-                            <span className="text-white/70 text-sm">vs last month</span>
-                        </motion.div>
+                        <div>
+                            <h3 className="mm-heading-md text-lg">My Wallet</h3>
+                            <p className="text-sm text-gray-500">Total Balance</p>
+                        </div>
                     </div>
 
-                    {/* Icon */}
-                    <motion.div
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ delay: 0.3, type: 'spring' as const }}
-                        whileHover={{ scale: 1.1, rotate: 10 }}
-                        className="w-20 h-20 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-xl"
+                    {/* Show/Hide Toggle */}
+                    <button
+                        onClick={() => setShowBalance(!showBalance)}
+                        className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                     >
-                        <Wallet className="w-10 h-10" />
-                    </motion.div>
+                        {showBalance ? (
+                            <Eye className="w-5 h-5 text-gray-600" />
+                        ) : (
+                            <EyeOff className="w-5 h-5 text-gray-600" />
+                        )}
+                    </button>
+                </div>
+
+                {/* Balance Display */}
+                <div className="py-4">
+                    <AnimatePresence mode="wait">
+                        {showBalance ? (
+                            <motion.div
+                                key="visible"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className="text-5xl font-bold text-mm-purple mb-2">
+                                    <NumericFormat
+                                        value={balance}
+                                        displayType="text"
+                                        thousandSeparator=","
+                                        prefix="₹"
+                                        renderText={(value) => <span>{value}</span>}
+                                    />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className={`flex items-center gap-1 px-3 py-1 rounded-full ${trend === 'up'
+                                            ? 'bg-mm-green/20 text-mm-green'
+                                            : 'bg-red-100 text-red-600'
+                                        }`}>
+                                        <TrendingUp className="w-4 h-4" />
+                                        <span className="text-sm font-bold">
+                                            +{trendPercentage}% this month
+                                        </span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="hidden"
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-5xl font-bold text-mm-purple"
+                            >
+                                ₹••••••
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
 
                 {/* Quick Actions */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    className="grid grid-cols-3 gap-3"
-                >
-                    {[
-                        { label: 'Add Money', icon: ArrowUpRight, color: 'from-green-400 to-emerald-500' },
-                        { label: 'Transfer', icon: TrendingUp, color: 'from-blue-400 to-cyan-500' },
-                        { label: 'Pay Bills', icon: CreditCard, color: 'from-purple-400 to-pink-500' },
-                    ].map((action, idx) => {
-                        const Icon = action.icon;
-                        return (
-                            <motion.button
-                                key={idx}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 + idx * 0.1 }}
-                                whileHover={{ scale: 1.05, y: -3 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="px-4 py-3 rounded-xl bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all flex items-center gap-2 text-sm font-medium"
-                            >
-                                <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${action.color} flex items-center justify-center shadow-lg`}>
-                                    <Icon className="w-4 h-4 text-white" />
-                                </div>
-                                <span className="hidden sm:inline">{action.label}</span>
-                            </motion.button>
-                        );
-                    })}
-                </motion.div>
+                <div className="pt-6 border-t border-gray-200">
+                    <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <span>⚡</span> Quick Actions
+                    </p>
+                    <div className="grid grid-cols-3 gap-3">
+                        <button className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 hover:border-mm-purple hover:bg-mm-purple/5 transition-all">
+                            <Plus className="w-5 h-5 text-mm-purple" />
+                            <span className="text-xs font-medium text-gray-700">Add Money</span>
+                        </button>
+                        <button className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 hover:border-mm-purple hover:bg-mm-purple/5 transition-all">
+                            <Send className="w-5 h-5 text-mm-purple" />
+                            <span className="text-xs font-medium text-gray-700">Transfer</span>
+                        </button>
+                        <button className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 hover:border-mm-purple hover:bg-mm-purple/5 transition-all">
+                            <ArrowUpRight className="w-5 h-5 text-mm-purple" />
+                            <span className="text-xs font-medium text-gray-700">Pay Bills</span>
+                        </button>
+                    </div>
+                </div>
+
+                {/* View Details Link */}
+                <button className="w-full py-3 text-mm-purple font-semibold hover:bg-mm-purple/5 rounded-xl transition-colors flex items-center justify-center gap-2">
+                    View Details
+                    <ArrowUpRight className="w-4 h-4" />
+                </button>
             </div>
         </motion.div>
     );

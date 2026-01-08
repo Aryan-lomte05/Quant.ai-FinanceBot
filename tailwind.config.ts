@@ -9,6 +9,17 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
+                // MetaMask Primary Colors
+                mm: {
+                    cream: '#F2E8DC',
+                    purple: '#3C154E',
+                    black: '#24272A',
+                    orange: '#E17726',
+                    green: '#00E676',
+                    blue: '#87CEEB',
+                    lavender: '#B794F6',
+                },
+                // Existing colors (keep for backward compatibility)
                 mint: {
                     50: '#ECFDF5',
                     100: '#D1FAE5',
@@ -57,6 +68,12 @@ const config: Config = {
                     800: '#6D28D9',
                     900: '#5B21B6',
                 },
+            },
+            borderRadius: {
+                'pill': '100px',
+            },
+            fontFamily: {
+                'display': ['DM Sans', 'Inter', 'system-ui', 'sans-serif'],
             },
         },
     },

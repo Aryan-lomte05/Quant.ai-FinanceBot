@@ -1,9 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Sidebar } from '@/components/layout/Sidebar';
-import { Header } from '@/components/layout/Header';
-import { MobileNav } from '@/components/layout/MobileNav';
+import { TopNavigation } from '@/components/layout/TopNavigation';
 import { MockToggle } from '@/components/shared/MockToggle';
 
 export default function ConditionalLayout({ children }: { children: React.ReactNode }) {
@@ -12,30 +10,21 @@ export default function ConditionalLayout({ children }: { children: React.ReactN
     // Check if current page is auth-related
     const isAuthPage = pathname?.startsWith('/auth');
 
-    // If auth page, render without sidebar/header
+    // If auth page, render without navigation
     if (isAuthPage) {
         return <>{children}</>;
     }
 
-    // Regular app layout with sidebar
+    // MetaMask-style layout with top navigation
     return (
-        <div className="flex h-screen bg-gray-50">
-            {/* Desktop Sidebar */}
-            <Sidebar className="hidden lg:flex" />
+        <div className="min-h-screen bg-mm-cream">
+            {/* Top Navigation */}
+            <TopNavigation />
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col overflow-hidden">
-                {/* Header */}
-                <Header />
-
-                {/* Page Content */}
-                <main className="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-6 pb-20 lg:pb-6">
-                    {children}
-                </main>
-            </div>
-
-            {/* Mobile Bottom Navigation */}
-            <MobileNav className="lg:hidden" />
+            <main className="mm-container py-8">
+                {children}
+            </main>
 
             {/* Developer Mock Toggle */}
             <MockToggle />

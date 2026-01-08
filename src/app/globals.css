@@ -1,12 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Inter:wght@400;500;600;700&display=swap');
+@import '../styles/metamask-theme.css';
+@import '../styles/metamask-layout.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    background-color: #F9FAFB;
+    background-color: #F2E8DC;
+    /* MetaMask cream */
     color: #111827;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
+}
+
+/* ============================================
+   METAMASK 3D EFFECTS
+   ============================================ */
+
+/* 3D Perspective Container */
+.perspective-container {
+  perspective: 1000px;
+  perspective-origin: center;
+}
+
+/* 3D Card Transform */
+.card-3d {
+  transform-style: preserve-3d;
+  transform: rotateX(2deg) rotateY(-2deg);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-3d:hover {
+  transform: rotateX(0deg) rotateY(0deg) scale(1.02);
+}
+
+/* Parallax Layers */
+.parallax-slow {
+  will-change: transform;
+}
+
+.parallax-fast {
+  will-change: transform;
+}
+
+/* Smooth Scroll */
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 @layer utilities {
