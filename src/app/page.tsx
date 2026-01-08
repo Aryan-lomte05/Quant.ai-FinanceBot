@@ -99,16 +99,16 @@ export default function DashboardPage() {
       <div className="space-y-0">
         {/* SECTION 1: Hero - Cream Background */}
         <section className="mm-section-cream mm-section-spacing relative">
-          {/* Logo Target Anchor (MetaMask Style) */}
-          <div data-logo-target="hero" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 pointer-events-none z-10" />
+          {/* Logo Target - Center Right */}
+          <div data-logo-target="hero" className="absolute right-1/4 top-1/2 -translate-y-1/2 w-96 h-96 pointer-events-none z-10" />
 
           <HeroSection />
         </section>
 
         {/* SECTION 2: Your Finances - Mint Green Background with ZOOM */}
         <section ref={financesSectionRef} className="mm-section-mint mm-section-spacing perspective-container overflow-hidden relative">
-          {/* Logo Target Anchor - Above Cards */}
-          <div data-logo-target="card" className="absolute left-1/2 top-64 -translate-x-1/2 w-64 h-64 pointer-events-none z-10" />
+          {/* Logo Target - Top Left */}
+          <div data-logo-target="card" className="absolute left-1/4 top-1/3 w-64 h-64 pointer-events-none z-10" />
 
           <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative">
             {/* Headline with Zoom Animation */}
@@ -257,8 +257,8 @@ export default function DashboardPage() {
 
         {/* SECTION 3: Analytics - Cream Background with ZOOM */}
         <section ref={analyticsSectionRef} className="mm-section-cream mm-section-spacing relative">
-          {/* Logo Target Anchor */}
-          <div data-logo-target="analytics" className="absolute left-1/2 top-1/4 -translate-x-1/2 w-48 h-48 pointer-events-none z-10" />
+          {/* Logo Target - Bottom Right */}
+          <div data-logo-target="analytics" className="absolute right-1/3 bottom-1/4 w-48 h-48 pointer-events-none z-10" />
 
           <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
             {/* Grid of Charts with Zoom */}
@@ -359,8 +359,8 @@ export default function DashboardPage() {
 
         {/* SECTION 4: Features - Orange Background with ZOOM */}
         <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing relative">
-          {/* Logo Target Anchor */}
-          <div data-logo-target="features" className="absolute right-1/4 top-1/3 -translate-x-1/2 w-56 h-56 pointer-events-none z-10" />
+          {/* Logo Target - Top Right Corner */}
+          <div data-logo-target="features" className="absolute right-1/4 top-1/4 w-56 h-56 pointer-events-none z-10" />
 
           <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
             <motion.h2
@@ -401,8 +401,8 @@ export default function DashboardPage() {
 
         {/* SECTION 5: CTA - Cream Background */}
         <section className="mm-section-cream mm-section-spacing relative">
-          {/* Logo Target Anchor - Small floating near CTA */}
-          <div data-logo-target="cta" className="absolute left-3/4 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 pointer-events-none z-10" />
+          {/* Logo Target - Center Left */}
+          <div data-logo-target="cta" className="absolute left-1/3 top-1/2 -translate-y-1/2 w-32 h-32 pointer-events-none z-10" />
 
           <div className="mm-container text-center px-4">
             <motion.div
