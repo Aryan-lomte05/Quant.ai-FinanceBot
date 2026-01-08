@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { HeroSection } from "@/components/metamask-ui/HeroSection";
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
@@ -21,11 +21,57 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
   const [spendingData, setSpendingData] = useState<Array<{ date: string; amount: number }>>([]);
 
-  const { scrollY } = useScroll();
+  // Refs for each section's scroll-zoom
+  const financesSectionRef = useRef<HTMLDivElement>(null);
+  const analyticsSectionRef = useRef<HTMLDivElement>(null);
+  const featuresSectionRef = useRef<HTMLDivElement>(null);
 
-  // Parallax for different layers
-  const yCards = useTransform(scrollY, [0, 1000], [0, -1300]);
-  const yCardsSmooth = useSpring(yCards, { stiffness: 100, damping: 30 });
+  // MetaMask scroll zoom for Finances section
+  const { scrollYProgress: financesProgress } = useScroll({
+    target: financesSectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Text: 0.5 → 1.0 (reduced to prevent overflow)
+  const financesTextScale = useSpring(
+    useTransform(financesProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
+    { stiffness: 100, damping: 30 }
+  );
+  const financesTextOpacity = useTransform(financesProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
+
+  // Cards: 0.95 → 1.0 (subtle zoom)
+  const financesCardScale = useSpring(
+    useTransform(financesProgress, [0, 0.5, 1], [0.95, 0.98, 1.0]),
+    { stiffness: 100, damping: 30 }
+  );
+
+  // MetaMask scroll zoom for Analytics section
+  const { scrollYProgress: analyticsProgress } = useScroll({
+    target: analyticsSectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const analyticsCardScale = useSpring(
+    useTransform(analyticsProgress, [0, 0.5, 1], [0.95, 0.98, 1.0]),
+    { stiffness: 100, damping: 30 }
+  );
+
+  // MetaMask scroll zoom for Features section  
+  const { scrollYProgress: featuresProgress } = useScroll({
+    target: featuresSectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  const featuresTextScale = useSpring(
+    useTransform(featuresProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
+    { stiffness: 100, damping: 30 }
+  );
+  const featuresTextOpacity = useTransform(featuresProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
+
+  const featuresCardScale = useSpring(
+    useTransform(featuresProgress, [0, 0.5, 1], [0.95, 0.98, 1.0]),
+    { stiffness: 100, damping: 30 }
+  );
 
   useEffect(() => {
     const generateSpendingTrend = () => {
@@ -51,16 +97,16 @@ export default function DashboardPage() {
         <HeroSection />
       </section>
 
-      {/* SECTION 2: Your Finances - Mint Green Background */}
-      <section className="mm-section-mint mm-section-spacing perspective-container overflow-hidden">
-        <div className="mm-container relative px-4">
-          {/* Section Headline - Above Cards */}
+      {/* SECTION 2: Your Finances - Mint Green Background with ZOOM */}
+      <section ref={financesSectionRef} className="mm-section-mint mm-section-spacing perspective-container overflow-hidden">
+        <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+          {/* Headline with Zoom Animation */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-20"
+            style={{
+              scale: financesTextScale,
+              opacity: financesTextOpacity
+            }}
+            className="mb-16"
           >
             <h2 className="mm-section-heading text-center">
               YOUR FINANCES
@@ -69,10 +115,11 @@ export default function DashboardPage() {
             </h2>
           </motion.div>
 
-          {/* Asymmetric Card Grid */}
+          {/* Cards with MetaMask Zoom */}
           <div className="mm-asymmetric-grid">
-            {/* Card 1: Top Left - Total Balance */}
+            {/* Card 1: Total Balance */}
             <motion.div
+              style={{ scale: financesCardScale }}
               initial={{ opacity: 0, x: -80, y: -60 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -106,8 +153,9 @@ export default function DashboardPage() {
               </div>
             </motion.div>
 
-            {/* Card 2: Right Side - Monthly Spent (Tall) */}
+            {/* Card 2: Monthly Spent */}
             <motion.div
+              style={{ scale: financesCardScale }}
               initial={{ opacity: 0, x: 80, y: 60 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -138,8 +186,9 @@ export default function DashboardPage() {
               </div>
             </motion.div>
 
-            {/* Card 3: Bottom Left - Savings (Wide) */}
+            {/* Card 3: Savings */}
             <motion.div
+              style={{ scale: financesCardScale }}
               initial={{ opacity: 0, x: -60, y: 80 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -169,8 +218,9 @@ export default function DashboardPage() {
               </div>
             </motion.div>
 
-            {/* Card 4: Bottom Right - Financial Score */}
+            {/* Card 4: Financial Score */}
             <motion.div
+              style={{ scale: financesCardScale }}
               initial={{ opacity: 0, x: 60, y: 80 }}
               whileInView={{ opacity: 1, x: 0, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -194,12 +244,13 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* SECTION 3: Analytics & Charts - Cream Background */}
-      <section className="mm-section-cream py-24">
-        <div className="mm-container px-4">
-          {/* Spending & Budget Grid */}
+      {/* SECTION 3: Analytics - Cream Background with ZOOM */}
+      <section ref={analyticsSectionRef} className="mm-section-cream mm-section-spacing">
+        <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+          {/* Grid of Charts with Zoom */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <motion.div
+              style={{ scale: analyticsCardScale }}
               initial={{ opacity: 0, x: -60 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -210,6 +261,7 @@ export default function DashboardPage() {
             </motion.div>
 
             <motion.div
+              style={{ scale: analyticsCardScale }}
               initial={{ opacity: 0, x: 60 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -220,8 +272,8 @@ export default function DashboardPage() {
             </motion.div>
           </div>
 
-          {/* Upcoming Bills */}
           <motion.div
+            style={{ scale: analyticsCardScale }}
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
@@ -231,9 +283,9 @@ export default function DashboardPage() {
             <UpcomingBillsCarousel />
           </motion.div>
 
-          {/* Charts Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <motion.div
+              style={{ scale: analyticsCardScale }}
               initial={{ opacity: 0, y: 80 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -244,6 +296,7 @@ export default function DashboardPage() {
             </motion.div>
 
             <motion.div
+              style={{ scale: analyticsCardScale }}
               initial={{ opacity: 0, y: 80 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -254,8 +307,8 @@ export default function DashboardPage() {
             </motion.div>
           </div>
 
-          {/* Budget Progress */}
           <motion.div
+            style={{ scale: analyticsCardScale }}
             initial={{ opacity: 0, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-120px" }}
@@ -265,7 +318,6 @@ export default function DashboardPage() {
             <BudgetProgressBars />
           </motion.div>
 
-          {/* Additional Widgets */}
           {[
             <EmergencyFundBarometer key="emergency" />,
             <SpendingInsights key="insights" />,
@@ -274,6 +326,7 @@ export default function DashboardPage() {
           ].map((component, index) => (
             <motion.div
               key={index}
+              style={{ scale: analyticsCardScale }}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -290,14 +343,14 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* SECTION 4: Features - Orange Background */}
-      <section className="mm-section-orange mm-section-spacing">
-        <div className="mm-container px-4">
+      {/* SECTION 4: Features - Orange Background with ZOOM */}
+      <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing">
+        <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
           <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              scale: featuresTextScale,
+              opacity: featuresTextOpacity
+            }}
             className="mm-section-heading mb-32 text-center"
           >
             EVERYTHING YOU NEED
@@ -311,6 +364,7 @@ export default function DashboardPage() {
             ].map((feature, i) => (
               <motion.div
                 key={i}
+                style={{ scale: featuresCardScale }}
                 initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -348,6 +402,6 @@ export default function DashboardPage() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </div >
   );
 }

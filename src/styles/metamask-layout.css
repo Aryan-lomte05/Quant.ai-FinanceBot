@@ -19,14 +19,16 @@
 .mm-section-heading {
     font-family: var(--mm-font-display);
     font-weight: 900;
-    font-size: clamp(36px, 7vw, 100px);
-    line-height: 0.95;
-    letter-spacing: -0.02em;
+    font-size: clamp(40px, 8vw, 96px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
     text-transform: uppercase;
     color: var(--mm-purple);
     max-width: 100%;
+    margin: 0 auto;
     overflow-wrap: break-word;
-    padding: 0 20px;
+    padding: 0 24px;
+    word-break: break-word;
 }
 
 /* ============================================
