@@ -3,6 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import { HeroSection } from "@/components/metamask-ui/HeroSection";
 import { Logo3D } from "@/components/shared/Logo3D";
+import { OpeningAnimation } from "@/components/animations/OpeningAnimation";
+import { RotatingCard } from "@/components/animations/RotatingCard";
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
 import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel";
@@ -93,6 +95,9 @@ export default function DashboardPage() {
 
   return (
     <>
+      {/* Opening Purple Animation - Shows once per session */}
+      <OpeningAnimation duration={1800} />
+
       {/* Fullscreen 3D Logo Canvas - Always On Top (MetaMask Style) */}
       <Logo3D />
 
@@ -128,41 +133,46 @@ export default function DashboardPage() {
 
             {/* Cards with MetaMask Zoom */}
             <div className="mm-asymmetric-grid">
-              {/* Card 1: Total Balance */}
-              <motion.div
-                style={{ scale: financesCardScale }}
-                initial={{ opacity: 0, x: -80, y: -60 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              {/* Card 1: Total Balance - With 3D Rotation */}
+              <RotatingCard
+                initialRotation={-25}
+                finalRotation={5}
                 className="mm-grid-item-1 z-10"
               >
-                <div className="mm-card mm-card-medium card-3d h-full">
-                  <div className="flex flex-col h-full justify-between">
-                    <div>
-                      <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
-                        <Wallet className="w-8 h-8 text-mm-purple" />
+                <motion.div
+                  style={{ scale: financesCardScale }}
+                  initial={{ opacity: 0, x: -80, y: -60 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="mm-card mm-card-medium card-3d h-full">
+                    <div className="flex flex-col h-full justify-between">
+                      <div>
+                        <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
+                          <Wallet className="w-8 h-8 text-mm-purple" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-mm-black mb-2">Total Balance</h3>
                       </div>
-                      <h3 className="text-2xl font-bold text-mm-black mb-2">Total Balance</h3>
-                    </div>
-                    <div>
-                      <div className="text-5xl font-bold text-mm-purple mb-3">
-                        <NumericFormat
-                          value={dashboardData.currentBalance}
-                          displayType="text"
-                          thousandSeparator=","
-                          prefix="₹"
-                          renderText={(value) => <span>{value}</span>}
-                        />
-                      </div>
-                      <div className="flex items-center gap-2 text-mm-green">
-                        <TrendingUp className="w-5 h-5" />
-                        <span className="font-semibold">+12% this month</span>
+                      <div>
+                        <div className="text-5xl font-bold text-mm-purple mb-3">
+                          <NumericFormat
+                            value={dashboardData.currentBalance}
+                            displayType="text"
+                            thousandSeparator=","
+                            prefix="₹"
+                            renderText={(value) => <span>{value}</span>}
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 text-mm-green">
+                          <TrendingUp className="w-5 h-5" />
+                          <span className="font-semibold">+12% this month</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </RotatingCard>
 
               {/* Card 2: Monthly Spent */}
               <motion.div
@@ -197,37 +207,42 @@ export default function DashboardPage() {
                 </div>
               </motion.div>
 
-              {/* Card 3: Savings */}
-              <motion.div
-                style={{ scale: financesCardScale }}
-                initial={{ opacity: 0, x: -60, y: 80 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              {/* Card 3: Savings - With 3D Rotation */}
+              <RotatingCard
+                initialRotation={-20}
+                finalRotation={3}
                 className="mm-grid-item-3 z-10"
               >
-                <div className="mm-card-colored mm-card-green mm-card-wide card-3d h-full">
-                  <div className="flex items-center justify-between h-full">
-                    <div>
-                      <div className="text-8xl mb-4">💰</div>
-                      <h3 className="text-3xl font-bold mb-2">Monthly Savings</h3>
-                      <div className="text-5xl font-bold">
-                        <NumericFormat
-                          value={dashboardData.monthSaved}
-                          displayType="text"
-                          thousandSeparator=","
-                          prefix="₹"
-                          renderText={(value) => <span>{value}</span>}
-                        />
+                <motion.div
+                  style={{ scale: financesCardScale }}
+                  initial={{ opacity: 0, x: -60, y: 80 }}
+                  whileInView={{ opacity: 1, x: 0, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <div className="mm-card-colored mm-card-green mm-card-wide card-3d h-full">
+                    <div className="flex items-center justify-between h-full">
+                      <div>
+                        <div className="text-8xl mb-4">💰</div>
+                        <h3 className="text-3xl font-bold mb-2">Monthly Savings</h3>
+                        <div className="text-5xl font-bold">
+                          <NumericFormat
+                            value={dashboardData.monthSaved}
+                            displayType="text"
+                            thousandSeparator=","
+                            prefix="₹"
+                            renderText={(value) => <span>{value}</span>}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-6xl font-bold">{dashboardData.savingsRate}%</div>
+                        <div className="text-xl mt-2">Savings Rate</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-6xl font-bold">{dashboardData.savingsRate}%</div>
-                      <div className="text-xl mt-2">Savings Rate</div>
-                    </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </RotatingCard>
 
               {/* Card 4: Financial Score */}
               <motion.div
