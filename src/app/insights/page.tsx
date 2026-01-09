@@ -1,32 +1,97 @@
 "use client";
 
-import { TrendingUp, AlertCircle, Sparkles } from "lucide-react";
+import { useRef } from "react";
+import { TrendingUp, AlertCircle, Sparkles, TrendingDown } from "lucide-react";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function InsightsPage() {
     const insights = [
-        { icon: TrendingUp, title: "Spending Up 40%", desc: "Shopping increased this week", color: "coral" },
-        { icon: AlertCircle, title: "Budget Alert", desc: "Food budget 90% used", color: "coral" },
-        { icon: Sparkles, title: "Great Job!", desc: "Savings up 15% this month", color: "mint" },
+        { icon: TrendingUp, title: "Spending Up 40%", desc: "Shopping increased this week", color: "mm-orange" },
+        { icon: AlertCircle, title: "Budget Alert", desc: "Food budget 90% used", color: "mm-orange" },
+        { icon: Sparkles, title: "Great Job!", desc: "Savings up 15% this month", color: "mm-green" },
     ];
 
-    return (
-        <div className="space-y-6 max-w-7xl mx-auto">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">Insights & Reports</h1>
-                <p className="text-gray-600 mt-1">AI-powered financial analysis</p>
-            </div>
+    // Scroll animations
+    const heroRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ["start end", "end start"]
+    });
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {insights.map((item) => (
-                    <div key={item.title} className="glass p-6 rounded-2xl border-2 border-white/50">
-                        <div className={`w-12 h-12 bg-${item.color}-100 rounded-xl flex items-center justify-center mb-4`}>
-                            <item.icon className={`w-6 h-6 text-${item.color}-600`} />
-                        </div>
-                        <h3 className="font-bold text-gray-900 mb-2">{item.title}</h3>
-                        <p className="text-sm text-gray-600">{item.desc}</p>
+    const textScale = useSpring(
+        useTransform(scrollYProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
+        { stiffness: 100, damping: 30 }
+    );
+    const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
+
+    return (
+        <div className="space-y-0">
+            {/* SECTION 1: Hero - Orange Background */}
+            <section ref={heroRef} className="mm-section-orange mm-section-spacing relative perspective-container overflow-hidden">
+                <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                    <motion.div
+                        style={{
+                            scale: textScale,
+                            opacity: textOpacity
+                        }}
+                        className="mb-16"
+                    >
+                        <h1 className="mm-section-heading text-center">
+                            SMART INSIGHTS
+                            <br />
+                            AI POWERED
+                        </h1>
+                        <p className="text-center text-xl text-gray-700 mt-6 max-w-2xl mx-auto">
+                            Deep analysis of your spending patterns and financial behavior
+                        </p>
+                    </motion.div>
+
+                    {/* Insights Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {insights.map((item, index) => (
+                            <motion.div
+                                key={item.title}
+                                initial={{ opacity: 0, y: 60 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                className="mm-card card-3d"
+                            >
+                                <div className={`w-16 h-16 bg-${item.color}/10 rounded-2xl flex items-center justify-center mb-6`}>
+                                    <item.icon className={`w-8 h-8 text-${item.color}`} />
+                                </div>
+                                <h3 className="text-2xl font-bold text-mm-black mb-3">{item.title}</h3>
+                                <p className="text-lg text-gray-600">{item.desc}</p>
+                            </motion.div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
+            </section>
+
+            {/* SECTION 2: CTA - Cream Background */}
+            <section className="mm-section-cream mm-section-spacing">
+                <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto text-center">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    >
+                        <h2 className="text-5xl md:text-6xl font-black text-mm-black mb-6 leading-tight">
+                            Get Full
+                            <br />
+                            Report
+                        </h2>
+                        <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
+                            Deep dive into your financial data with our comprehensive analysis
+                        </p>
+                        <button className="mm-btn mm-btn-primary text-lg px-12 py-6">
+                            <Sparkles className="w-6 h-6" />
+                            View Full Analysis
+                        </button>
+                    </motion.div>
+                </div>
+            </section>
         </div>
     );
 }

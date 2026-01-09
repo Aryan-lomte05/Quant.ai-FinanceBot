@@ -6,11 +6,11 @@ import { SuggestedQueries } from '@/components/chat/SuggestedQueries';
 import { VoiceRecorder } from '@/components/chat/VoiceRecorder';
 import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { ChatMessage } from '@/lib/types/chat';
-import { Send, Sparkles, Camera, Paperclip } from 'lucide-react';
+import { Send, Sparkles, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 
-// Mock AI Responses
+// Mock AI Responses - keeping existing logic
 const getAIResponse = (userMessage: string): ChatMessage => {
     const lowerMsg = userMessage.toLowerCase();
 
@@ -56,58 +56,6 @@ However, I recommend waiting **2 weeks** for your next salary to maintain your *
         };
     }
 
-    if (lowerMsg.includes('forecast') || lowerMsg.includes('savings') || lowerMsg.includes('predict')) {
-        return {
-            id: `msg_${Date.now()}`,
-            role: 'assistant',
-            content: `📊 **LSTM Savings Forecast** (Next 90 Days):
-
-**7-day forecast:** ₹22,450 (+₹1,100)
-**30-day forecast:** ₹28,900 (+₹7,550)  
-**90-day forecast:** ₹45,600 (+₹24,250) 🚀
-
-You're on track to **exceed** your quarterly goal by **₹15,000**! Keep up the momentum! 🔥
-
-**Pro tip:** If you reduce food spending by 15%, you'll hit ₹50K in 90 days!`,
-            timestamp: new Date().toISOString(),
-            type: 'text',
-            metadata: {
-                actions: [
-                    { label: 'View Detailed Chart', action: 'view_forecast_chart', icon: '📈' },
-                    { label: 'Set Reminder', action: 'set_reminder', icon: '⏰' },
-                ],
-            },
-        };
-    }
-
-    if (lowerMsg.includes('analyze') || lowerMsg.includes('spending')) {
-        return {
-            id: `msg_${Date.now()}`,
-            role: 'assistant',
-            content: `🔍 **Spending Analysis (This Month):**
-
-**Top Categories:**
-1. 🍔 Food & Dining: ₹6,540 (23%)
-2. 🚗 Transport: ₹2,890 (10%)
-3. 🛍️ Shopping: ₹5,420 (19%)
-
-**Insights:**
-- You spend **40% more on weekends** vs weekdays
-- Swiggy orders increased **3x this week** 📈
-- You're **15% below** average for similar earners
-
-**Recommendation:** Set a ₹500/week limit on food delivery to save ₹2,000/month!`,
-            timestamp: new Date().toISOString(),
-            type: 'text',
-            metadata: {
-                actions: [
-                    { label: 'View Full Report', action: 'view_report', icon: '📄' },
-                    { label: 'Set Spending Limit', action: 'set_limit', icon: '🚫' },
-                ],
-            },
-        };
-    }
-
     // Default response
     return {
         id: `msg_${Date.now()}`,
@@ -145,6 +93,19 @@ I've analyzed your spending and have some insights. What would you like to know?
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Scroll animations for hero
+    const heroRef = useRef<HTMLDivElement>(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ["start end", "end start"]
+    });
+
+    const textScale = useSpring(
+        useTransform(scrollYProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
+        { stiffness: 100, damping: 30 }
+    );
+    const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
+
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isTyping]);
@@ -153,7 +114,6 @@ I've analyzed your spending and have some insights. What would you like to know?
         const messageText = text || input;
         if (!messageText.trim() || isTyping) return;
 
-        // Add user message
         const userMessage: ChatMessage = {
             id: `msg_${Date.now()}`,
             role: 'user',
@@ -166,7 +126,6 @@ I've analyzed your spending and have some insights. What would you like to know?
         setInput('');
         setIsTyping(true);
 
-        // Simulate AI response delay
         setTimeout(() => {
             const aiResponse = getAIResponse(messageText);
             setMessages(prev => [...prev, aiResponse]);
@@ -176,89 +135,111 @@ I've analyzed your spending and have some insights. What would you like to know?
 
     const handleAction = (action: string) => {
         console.log('Action triggered:', action);
-        // Handle action buttons (future: navigate to pages, open modals, etc.)
     };
 
     const handleVoiceTranscript = (transcript: string) => {
         setInput(transcript);
-        // Auto-send after voice input
         setTimeout(() => handleSend(transcript), 500);
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-8rem)] max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="mb-4 glass p-4 rounded-2xl border-2 border-white/50">
-                <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-lavender-500 to-skyBlue-500 rounded-full flex items-center justify-center">
-                        <Sparkles className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                        <h1 className="text-2xl font-bold text-gray-900">AI Bandhu</h1>
-                        <p className="text-sm text-gray-600">Your financial assistant • Powered by Phi-3.5</p>
-                    </div>
+        <div className="space-y-0">
+            {/* SECTION 1: Hero - Mint Background */}
+            <section ref={heroRef} className="mm-section-mint mm-section-spacing relative perspective-container overflow-hidden">
+                <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto text-center">
+                    <motion.div
+                        style={{
+                            scale: textScale,
+                            opacity: textOpacity
+                        }}
+                        className="mb-8"
+                    >
+                        <h1 className="mm-section-heading text-center">
+                            YOUR AI
+                            <br />
+                            FINANCE BUDDY
+                        </h1>
+                        <p className="text-xl text-gray-700 mt-6 max-w-2xl mx-auto">
+                            Powered by Phi-3.5 • Real-time insights • Smart recommendations
+                        </p>
+                    </motion.div>
                 </div>
-            </div>
+            </section>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-2">
-                {messages.map((message) => (
-                    <ChatBubble key={message.id} message={message} onAction={handleAction} />
-                ))}
-
-                {isTyping && <TypingIndicator />}
-
-                <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input Area */}
-            <div className="mt-4 space-y-4">
-                {/* Suggested Queries (show only when no messages or at start) */}
-                {messages.length <= 1 && !isTyping && (
-                    <SuggestedQueries onSelect={handleSend} disabled={isTyping} />
-                )}
-
-                {/* Input Box */}
-                <div className="glass p-4 rounded-2xl border-2 border-white/50">
-                    <div className="flex gap-3 items-end">
-                        {/* Attachments (future feature) */}
-                        <Button variant="ghost" size="icon" className="hover:bg-mint-50 flex-shrink-0">
-                            <Camera className="w-5 h-5 text-gray-600" />
-                        </Button>
-
-                        {/* Text Input */}
-                        <div className="flex-1">
-                            <input
-                                ref={inputRef}
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="Ask me anything about your finances..."
-                                disabled={isTyping}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-mint-500 focus:border-transparent disabled:opacity-50"
-                            />
+            {/* SECTION 2: Chat Interface - Cream Background */}
+            <section className="mm-section-cream mm-section-spacing">
+                <div className="mm-container px-8 py-16 w-full max-w-5xl mx-auto">
+                    <div className="flex flex-col h-[600px] relative">
+                        {/* Chat Header */}
+                        <div className="mb-6 glass p-4 rounded-2xl border-2 border-white/50">
+                            <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-mm-purple to-mm-lavender rounded-full flex items-center justify-center">
+                                    <Sparkles className="w-6 h-6 text-white" />
+                                </div>
+                                <div>
+                                    <h2 className="text-2xl font-bold text-mm-black">AI Bandhu</h2>
+                                    <p className="text-sm text-gray-600">Your financial assistant • Powered by Phi-3.5</p>
+                                </div>
+                            </div>
                         </div>
 
-                        {/* Voice Input */}
-                        <VoiceRecorder onTranscript={handleVoiceTranscript} disabled={isTyping} />
+                        {/* Messages */}
+                        <div className="flex-1 overflow-y-auto custom-scrollbar px-2 mm-card card-3d p-6 rounded-3xl">
+                            {messages.map((message) => (
+                                <ChatBubble key={message.id} message={message} onAction={handleAction} />
+                            ))}
 
-                        {/* Send Button */}
-                        <Button
-                            onClick={() => handleSend()}
-                            disabled={!input.trim() || isTyping}
-                            className="bg-gradient-to-r from-mint-500 to-skyBlue-500 hover:from-mint-600 hover:to-skyBlue-600 text-white flex-shrink-0"
-                        >
-                            <Send className="w-5 h-5" />
-                        </Button>
+                            {isTyping && <TypingIndicator />}
+
+                            <div ref={messagesEndRef} />
+                        </div>
+
+                        {/* Input Area */}
+                        <div className="mt-6 space-y-4">
+                            {/* Suggested Queries */}
+                            {messages.length <= 1 && !isTyping && (
+                                <SuggestedQueries onSelect={handleSend} disabled={isTyping} />
+                            )}
+
+                            {/* Input Box */}
+                            <div className="glass p-4 rounded-2xl border-2 border-white/50">
+                                <div className="flex gap-3 items-end">
+                                    <Button variant="ghost" size="icon" className="hover:bg-mm-green/10 flex-shrink-0">
+                                        <Camera className="w-5 h-5 text-gray-600" />
+                                    </Button>
+
+                                    <div className="flex-1">
+                                        <input
+                                            ref={inputRef}
+                                            type="text"
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                            placeholder="Ask me anything about your finances..."
+                                            disabled={isTyping}
+                                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-mm-green focus:border-transparent disabled:opacity-50"
+                                        />
+                                    </div>
+
+                                    <VoiceRecorder onTranscript={handleVoiceTranscript} disabled={isTyping} />
+
+                                    <Button
+                                        onClick={() => handleSend()}
+                                        disabled={!input.trim() || isTyping}
+                                        className="mm-btn mm-btn-primary flex-shrink-0"
+                                    >
+                                        <Send className="w-5 h-5" />
+                                    </Button>
+                                </div>
+                            </div>
+
+                            <p className="text-xs text-center text-gray-500">
+                                AI responses are powered by Phi-3.5 and may not always be accurate. Always verify important financial decisions.
+                            </p>
+                        </div>
                     </div>
                 </div>
-
-                {/* Footer Info */}
-                <p className="text-xs text-center text-gray-500">
-                    AI responses are powered by Phi-3.5 and may not always be accurate. Always verify important financial decisions.
-                </p>
-            </div>
+            </section>
         </div>
     );
 }
