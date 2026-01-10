@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Poppins } from 'next/font/google';
+import { Poppins, Roboto_Mono } from 'next/font/google';
 import './globals.css';
 import ConditionalLayout from '@/components/layout/ConditionalLayout';
 import { SmoothScrollProvider } from '@/components/providers/SmoothScrollProvider';
@@ -14,6 +14,13 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
+const robotoMono = Roboto_Mono({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto-mono',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
   title: 'Budget Bandhu - Your Financial Friend',
   description: 'AI-powered personal finance management',
@@ -25,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={poppins.variable}>
+    <html lang="en" className={`${poppins.variable} ${robotoMono.variable}`}>
       <body className="font-sans antialiased">
         <SmoothScrollProvider>
           {/* <ParallaxBackground /> */}
