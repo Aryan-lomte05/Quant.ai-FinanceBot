@@ -39,13 +39,13 @@ export default function SIPCalculator() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Input Section */}
-                <div className="glass p-8 rounded-2xl border-2 border-white/50">
+                <div className="bg-[#FFF1EB] shadow-sm p-8 rounded-2xl border-2 border-white/50">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="w-12 h-12 bg-mint-100 rounded-xl flex items-center justify-center">
                             <TrendingUp className="w-6 h-6 text-mint-600" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">SIP Calculator</h1>
+                            <h1 className="text-2xl font-bold text-mm-purple">SIP Calculator</h1>
                             <p className="text-sm text-gray-600">Calculate your mutual fund returns</p>
                         </div>
                     </div>
@@ -132,7 +132,7 @@ export default function SIPCalculator() {
                         key={futureValue}
                         initial={{ scale: 0.95 }}
                         animate={{ scale: 1 }}
-                        className="glass p-8 rounded-2xl border-2 border-white/50 text-center"
+                        className="bg-[#FFF1EB] shadow-sm p-8 rounded-2xl border-2 border-white/50 text-center"
                     >
                         <p className="text-sm text-gray-600 mb-2">Future Value</p>
                         <motion.h2
@@ -160,7 +160,7 @@ export default function SIPCalculator() {
                     </motion.div>
 
                     {/* Breakdown */}
-                    <div className="glass p-6 rounded-2xl border-2 border-white/50">
+                    <div className="bg-[#FFF1EB] shadow-sm p-6 rounded-2xl border-2 border-white/50">
                         <h3 className="font-bold text-gray-900 mb-4">Investment Breakdown</h3>
 
                         <div className="space-y-3">
