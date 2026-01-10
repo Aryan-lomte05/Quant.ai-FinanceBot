@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, AlertCircle, Lightbulb, Target, Zap, ShoppingBag, Coffee, Star } from 'lucide-react';
+import { mockData } from '@/lib/api/mock-data';
 
 interface Insight {
     id: string;
@@ -17,80 +18,60 @@ interface Insight {
 }
 
 export function SpendingInsights() {
-    const insights: Insight[] = [
-        {
-            id: '1',
-            type: 'warning',
-            title: 'Shopping Spike Detected',
-            message: 'Your shopping expenses increased by 45% this week. Consider reviewing recent purchases.',
-            action: 'View Transactions',
-            icon: AlertCircle,
-            color: 'text-orange-600',
-            bgColor: 'bg-orange-50',
-            gradient: 'from-orange-400 to-red-500',
-            value: '+₹4,500',
-        },
-        {
-            id: '2',
-            type: 'tip',
-            title: 'Save on Coffee ☕',
-            message: 'You spent ₹2,400 on coffee this month. Brewing at home could save ₹1,800/month!',
-            action: 'Set Budget',
-            icon: Coffee,
-            color: 'text-amber-600',
-            bgColor: 'bg-amber-50',
-            gradient: 'from-amber-400 to-orange-500',
-            value: '₹1,800',
-        },
-        {
-            id: '3',
-            type: 'achievement',
-            title: 'Dining Budget Champion! 🎉',
-            message: 'Great job! You stayed 20% under your dining budget this month.',
-            action: 'Share Achievement',
-            icon: Star,
-            color: 'text-emerald-600',
-            bgColor: 'bg-emerald-50',
-            gradient: 'from-emerald-400 to-green-500',
-            value: '-₹2,000',
-        },
-        {
-            id: '4',
-            type: 'trend',
-            title: 'Weekend Spending Pattern',
-            message: 'You typically spend 3x more on weekends. Plan ahead to manage expenses better.',
-            action: 'View Pattern',
-            icon: TrendingUp,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-50',
-            gradient: 'from-blue-400 to-cyan-500',
-            value: '3x more',
-        },
-        {
-            id: '5',
-            type: 'tip',
-            title: 'Subscription Optimization',
-            message: 'You have 5 active subscriptions totaling ₹3,500/month. Review unused services.',
-            action: 'Manage Subscriptions',
-            icon: Zap,
-            color: 'text-purple-600',
-            bgColor: 'bg-purple-50',
-            gradient: 'from-purple-400 to-pink-500',
-            value: '₹3,500',
-        },
-        {
-            id: '6',
-            type: 'achievement',
-            title: 'Savings Goal Progress 🎯',
-            message: 'You are 75% towards your Europe Trip goal! Just ₹25,000 more to go.',
-            action: 'Add Funds',
-            icon: Target,
-            color: 'text-indigo-600',
-            bgColor: 'bg-indigo-50',
-            gradient: 'from-indigo-400 to-purple-500',
-            value: '75%',
-        },
-    ];
+    const getInsightStyles = (type: string) => {
+        switch (type) {
+            case 'spending_spike':
+            case 'warning':
+                return {
+                    type: 'warning',
+                    icon: AlertCircle,
+                    color: 'text-orange-600',
+                    bgColor: 'bg-orange-50',
+                    gradient: 'from-orange-400 to-red-500'
+                };
+            case 'achievement':
+                return {
+                    type: 'achievement',
+                    icon: Star,
+                    color: 'text-emerald-600',
+                    bgColor: 'bg-emerald-50',
+                    gradient: 'from-emerald-400 to-green-500'
+                };
+            case 'forecast':
+            case 'trend':
+                return {
+                    type: 'trend',
+                    icon: TrendingUp,
+                    color: 'text-blue-600',
+                    bgColor: 'bg-blue-50',
+                    gradient: 'from-blue-400 to-cyan-500'
+                };
+            default: // tip
+                return {
+                    type: 'tip',
+                    icon: Lightbulb,
+                    color: 'text-purple-600',
+                    bgColor: 'bg-purple-50',
+                    gradient: 'from-purple-400 to-pink-500'
+                };
+        }
+    };
+
+    const insights: Insight[] = mockData.insights.map(i => {
+        const styles = getInsightStyles(i.type);
+        return {
+            id: i.id,
+            type: styles.type as any,
+            title: i.title,
+            message: i.description,
+            action: 'View Details',
+            icon: styles.icon,
+            color: styles.color,
+            bgColor: styles.bgColor,
+            gradient: styles.gradient,
+            value: ''
+        };
+    });
 
     const getIconStyles = (type: string) => {
         switch (type) {

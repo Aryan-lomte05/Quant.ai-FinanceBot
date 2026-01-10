@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, TrendingUp, TrendingDown, Calendar, ArrowRight, Zap, PiggyBank, Wallet } from 'lucide-react';
+import { mockData } from '@/lib/api/mock-data';
 
 interface TimeComparison {
     period: string;
@@ -24,26 +25,7 @@ interface TimeComparison {
 export function FinancialTimeMachine() {
     const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'quarter' | 'year'>('month');
 
-    const comparisons: Record<string, TimeComparison> = {
-        month: {
-            period: '1 Month',
-            label: 'vs Last Month',
-            current: { income: 85000, expenses: 42500, savings: 42500, balance: 245680 },
-            past: { income: 80000, expenses: 48000, savings: 32000, balance: 203180 },
-        },
-        quarter: {
-            period: '3 Months',
-            label: 'vs Last Quarter',
-            current: { income: 255000, expenses: 127500, savings: 127500, balance: 245680 },
-            past: { income: 240000, expenses: 144000, savings: 96000, balance: 118180 },
-        },
-        year: {
-            period: '1 Year',
-            label: 'vs Last Year',
-            current: { income: 1020000, expenses: 510000, savings: 510000, balance: 245680 },
-            past: { income: 960000, expenses: 576000, savings: 384000, balance: 118180 },
-        },
-    };
+    const comparisons: Record<string, TimeComparison> = mockData.financialHistory as any;
 
     const data = comparisons[selectedPeriod];
 
@@ -125,8 +107,8 @@ export function FinancialTimeMachine() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${selectedPeriod === period
-                                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
-                                    : 'text-gray-600 hover:bg-white'
+                                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
+                                : 'text-gray-600 hover:bg-white'
                                 }`}
                         >
                             {period === 'month' ? '1M' : period === 'quarter' ? '3M' : '1Y'}
@@ -202,8 +184,8 @@ export function FinancialTimeMachine() {
                                         animate={{ scale: 1 }}
                                         transition={{ delay: 0.9 + index * 0.1, type: 'spring' }}
                                         className={`flex items-center gap-1 px-2.5 py-1 rounded-full ${isGood
-                                                ? 'bg-emerald-100 text-emerald-700'
-                                                : 'bg-red-100 text-red-700'
+                                            ? 'bg-emerald-100 text-emerald-700'
+                                            : 'bg-red-100 text-red-700'
                                             }`}
                                     >
                                         {change.isPositive ? (

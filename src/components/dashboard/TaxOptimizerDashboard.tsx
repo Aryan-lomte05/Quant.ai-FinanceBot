@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FileText, TrendingUp, AlertCircle, CheckCircle, Plus, Calculator, PiggyBank, Heart, Home, GraduationCap, Shield } from 'lucide-react';
+import { mockData } from '@/lib/api/mock-data';
 
 interface TaxInvestment {
     id: string;
@@ -16,60 +17,32 @@ interface TaxInvestment {
 }
 
 export function TaxOptimizerDashboard() {
-    const maxLimit80C = 150000;
+    const maxLimit80C = mockData.tax.maxLimit80C;
 
-    const investments: TaxInvestment[] = [
-        {
-            id: '1',
-            category: 'PPF',
-            amount: 45000,
-            limit: 150000,
-            icon: PiggyBank,
-            color: 'emerald',
-            gradient: 'from-emerald-500 to-green-600',
-            description: 'Public Provident Fund',
-        },
-        {
-            id: '2',
-            category: 'ELSS',
-            amount: 30000,
-            limit: 150000,
-            icon: TrendingUp,
-            color: 'blue',
-            gradient: 'from-blue-500 to-cyan-600',
-            description: 'Equity Linked Savings Scheme',
-        },
-        {
-            id: '3',
-            category: 'Life Insurance',
-            amount: 25000,
-            limit: 150000,
-            icon: Shield,
-            color: 'purple',
-            gradient: 'from-purple-500 to-pink-600',
-            description: 'Premium paid',
-        },
-        {
-            id: '4',
-            category: 'Home Loan',
-            amount: 15000,
-            limit: 150000,
-            icon: Home,
-            color: 'orange',
-            gradient: 'from-orange-500 to-red-600',
-            description: 'Principal repayment',
-        },
-        {
-            id: '5',
-            category: 'Tuition Fees',
-            amount: 8000,
-            limit: 150000,
-            icon: GraduationCap,
-            color: 'indigo',
-            gradient: 'from-indigo-500 to-purple-600',
-            description: 'Children education',
-        },
-    ];
+    const getInvestStyle = (category: string) => {
+        switch (category) {
+            case 'PPF': return { icon: PiggyBank, color: 'emerald', gradient: 'from-emerald-500 to-green-600' };
+            case 'ELSS': return { icon: TrendingUp, color: 'blue', gradient: 'from-blue-500 to-cyan-600' };
+            case 'Life Insurance': return { icon: Shield, color: 'purple', gradient: 'from-purple-500 to-pink-600' };
+            case 'Home Loan': return { icon: Home, color: 'orange', gradient: 'from-orange-500 to-red-600' };
+            case 'Tuition Fees': return { icon: GraduationCap, color: 'indigo', gradient: 'from-indigo-500 to-purple-600' };
+            default: return { icon: FileText, color: 'gray', gradient: 'from-gray-500 to-gray-600' };
+        }
+    };
+
+    const investments: TaxInvestment[] = mockData.tax.investments.map(inv => {
+        const style = getInvestStyle(inv.category);
+        return {
+            id: inv.id,
+            category: inv.category,
+            amount: inv.amount,
+            limit: inv.limit,
+            description: inv.description,
+            icon: style.icon,
+            color: style.color,
+            gradient: style.gradient
+        };
+    });
 
     const totalInvested = investments.reduce((sum, inv) => sum + inv.amount, 0);
     const remaining = maxLimit80C - totalInvested;
