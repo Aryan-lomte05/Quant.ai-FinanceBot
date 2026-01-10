@@ -262,7 +262,70 @@ export const mockData = {
         },
     ],
 
-    // Anomalies detected
+    // Financial History (Time Machine)
+    financialHistory: {
+        month: {
+            period: '1 Month',
+            label: 'vs Last Month',
+            current: { income: 85000, expenses: 42500, savings: 42500, balance: 245680 },
+            past: { income: 80000, expenses: 48000, savings: 32000, balance: 203180 },
+        },
+        quarter: {
+            period: '3 Months',
+            label: 'vs Last Quarter',
+            current: { income: 255000, expenses: 127500, savings: 127500, balance: 245680 },
+            past: { income: 240000, expenses: 144000, savings: 96000, balance: 118180 },
+        },
+        year: {
+            period: '1 Year',
+            label: 'vs Last Year',
+            current: { income: 1020000, expenses: 510000, savings: 510000, balance: 245680 },
+            past: { income: 960000, expenses: 576000, savings: 384000, balance: 118180 },
+        },
+    },
+
+    // Tax Optimization Data
+    tax: {
+        maxLimit80C: 150000,
+        investments: [
+            {
+                id: '1',
+                category: 'PPF',
+                amount: 45000,
+                limit: 150000,
+                description: 'Public Provident Fund',
+            },
+            {
+                id: '2',
+                category: 'ELSS',
+                amount: 30000,
+                limit: 150000,
+                description: 'Equity Linked Savings Scheme',
+            },
+            {
+                id: '3',
+                category: 'Life Insurance',
+                amount: 25000,
+                limit: 150000,
+                description: 'Premium paid',
+            },
+            {
+                id: '4',
+                category: 'Home Loan',
+                amount: 15000,
+                limit: 150000,
+                description: 'Principal repayment',
+            },
+            {
+                id: '5',
+                category: 'Tuition Fees',
+                amount: 8000,
+                limit: 150000,
+                description: 'Children education',
+            },
+        ]
+    },
+
     anomalies: [
         {
             id: 'anom_001',
