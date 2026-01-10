@@ -40,6 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+
 # MetaMask reference files - DO NOT PUSH
 src/components/metamask/
 src/app/metamask-demo/

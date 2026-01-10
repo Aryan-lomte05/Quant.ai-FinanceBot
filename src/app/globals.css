@@ -182,3 +182,145 @@ html.lenis {
 .animate-float {
   animation: float linear infinite;
 }
+
+/* ============================================
+   METAMASK SECTION ROUNDING
+   ============================================ */
+
+/* Rounded section backgrounds */
+.mm-section-mint,
+.mm-section-cream,
+.mm-section-orange,
+.mm-section-midnight {
+  border-radius: 2rem;
+  margin: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .mm-section-mint,
+  .mm-section-cream,
+  .mm-section-orange,
+  .mm-section-midnight {
+    border-radius: 3rem;
+    margin: 1rem;
+  }
+}
+
+/* ============================================
+   METAMASK MICROINTERACTIONS
+   ============================================ */
+
+/* Button hover lift */
+.mm-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.mm-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Playful coin wiggle animation */
+@keyframes coin-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-10deg) scale(1.1); }
+  75% { transform: rotate(10deg) scale(1.1); }
+}
+
+.coin-wiggle:hover {
+  animation: coin-wiggle 0.5s ease-in-out;
+}
+
+/* Sparkle effect on hover */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+.sparkle-on-hover::after {
+  content: '✨';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 1rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sparkle-on-hover:hover::after {
+  animation: sparkle 0.6s ease-out;
+}
+
+/* Interactive card slight tilt on hover */
+.interactive-tilt {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-tilt:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
+}
+
+/* Stat card pulse on value change */
+@keyframes stat-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.stat-pulse {
+  animation: stat-pulse 0.3s ease-out;
+}
+
+/* Icon bounce on hover */
+.icon-bounce:hover {
+  animation: bounce 0.5s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Gradient shimmer effect */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.gradient-shimmer {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255,255,255,0.3) 50%, 
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Smooth focus ring */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+/* ============================================
+   LENIS SMOOTH SCROLL
+   ============================================ */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
