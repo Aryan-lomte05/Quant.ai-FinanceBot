@@ -100,6 +100,7 @@ export function Logo3D() {
         // Preload with progress tracking
         const loadModel = async () => {
             try {
+                // WARNING: 'logo.glb' is ~90MB. Ideally should be compressed to <5MB.
                 await useGLTF.preload('/logo.glb');
                 setIsLoading(false);
             } catch (error) {
