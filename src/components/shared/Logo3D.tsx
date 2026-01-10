@@ -2,7 +2,7 @@
 
 import { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, PerspectiveCamera, Environment, Float } from '@react-three/drei';
+import { useGLTF, PerspectiveCamera, Environment, Float, Image } from '@react-three/drei';
 import * as THREE from 'three';
 
 function Logo3DModel({ targetPosition, targetScale }: { targetPosition: THREE.Vector3; targetScale: number }) {
@@ -68,13 +68,23 @@ function Logo3DModel({ targetPosition, targetScale }: { targetPosition: THREE.Ve
     return <primitive ref={meshRef} object={scene} />;
 }
 
-// Loading component
+// Loading component with 2D fallback
 function LoadingFallback() {
     return (
-        <mesh>
-            <sphereGeometry args={[1, 32, 32]} />
-            <meshStandardMaterial color="#8B5CF6" wireframe />
-        </mesh>
+        <group>
+            {/* Fallback to 2D image while 3D model loads */}
+            <Image
+                url="/piggy-bank-logo.png"
+                scale={3}
+                transparent
+                opacity={0.8}
+            />
+            <mesh>
+                {/* Subtle pulse to indicate loading */}
+                <sphereGeometry args={[1.2, 32, 32]} />
+                <meshBasicMaterial color="#8B5CF6" wireframe transparent opacity={0.1} />
+            </mesh>
+        </group>
     );
 }
 
