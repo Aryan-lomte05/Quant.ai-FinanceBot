@@ -207,7 +207,7 @@ export function Logo3D() {
                         antialias: true,
                         powerPreference: "high-performance"
                     }}
-                    style={{ background: 'transparent' }}
+                    style={{ background: 'transparent', pointerEvents: 'none' }}
                 >
                     <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
 
