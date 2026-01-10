@@ -159,7 +159,7 @@ export function UpcomingBillsCarousel() {
             <div className="relative">
                 {/* Bill Card with Swipe Animation */}
                 <div className="relative h-64 mb-4 overflow-hidden">
-                    <AnimatePresence initial={false} custom={direction} mode="wait">
+                    <AnimatePresence initial={false} custom={direction}>
                         <motion.div
                             key={currentIndex}
                             custom={direction}
@@ -248,12 +248,12 @@ export function UpcomingBillsCarousel() {
                 </div>
 
                 {/* Navigation Buttons */}
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-4 relative z-50">
                     <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={prevBill}
-                        className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center shadow-lg"
+                        className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center shadow-lg cursor-pointer"
                     >
                         <ChevronLeft className="w-6 h-6 text-gray-700" />
                     </motion.button>
@@ -271,8 +271,8 @@ export function UpcomingBillsCarousel() {
                             >
                                 <motion.div
                                     className={`h-2 rounded-full transition-all ${idx === currentIndex
-                                            ? 'w-8 bg-gradient-to-r from-pink-500 to-rose-600'
-                                            : 'w-2 bg-gray-300 group-hover:bg-gray-400'
+                                        ? 'w-8 bg-gradient-to-r from-pink-500 to-rose-600'
+                                        : 'w-2 bg-gray-300 group-hover:bg-gray-400'
                                         }`}
                                     whileHover={{ scale: 1.2 }}
                                 />
@@ -284,7 +284,7 @@ export function UpcomingBillsCarousel() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={nextBill}
-                        className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center shadow-lg"
+                        className="w-12 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 transition-colors flex items-center justify-center shadow-lg cursor-pointer"
                     >
                         <ChevronRight className="w-6 h-6 text-gray-700" />
                     </motion.button>

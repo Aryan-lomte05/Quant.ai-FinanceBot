@@ -146,7 +146,11 @@ export default function DashboardPage() {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="mm-card mm-card-medium card-3d h-full">
+                  <motion.div
+                    whileHover={{ scale: 1.1, zIndex: 50 }}
+                    transition={{ duration: 0.2 }}
+                    className="mm-card mm-card-medium h-full cursor-pointer"
+                  >
                     <div className="flex flex-col h-full justify-between">
                       <div>
                         <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
@@ -170,7 +174,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               </RotatingCard>
 
@@ -183,7 +187,11 @@ export default function DashboardPage() {
                 transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className="mm-grid-item-2 z-10"
               >
-                <div className="mm-card-colored mm-card-orange mm-card-tall card-3d h-full">
+                <motion.div
+                  whileHover={{ scale: 1.1, zIndex: 50 }}
+                  transition={{ duration: 0.2 }}
+                  className="mm-card-colored mm-card-orange mm-card-tall h-full cursor-pointer"
+                >
                   <div className="flex flex-col h-full justify-between">
                     <div>
                       <div className="text-7xl mb-6">💸</div>
@@ -204,7 +212,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
 
               {/* Card 3: Savings - With 3D Rotation */}
@@ -220,7 +228,11 @@ export default function DashboardPage() {
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <div className="mm-card-colored mm-card-green mm-card-wide card-3d h-full">
+                  <motion.div
+                    whileHover={{ scale: 1.1, zIndex: 50 }}
+                    transition={{ duration: 0.2 }}
+                    className="mm-card-colored mm-card-green mm-card-wide h-full cursor-pointer"
+                  >
                     <div className="flex items-center justify-between h-full">
                       <div>
                         <div className="text-8xl mb-4">💰</div>
@@ -240,7 +252,7 @@ export default function DashboardPage() {
                         <div className="text-xl mt-2">Savings Rate</div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
               </RotatingCard>
 
@@ -253,7 +265,11 @@ export default function DashboardPage() {
                 transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="mm-grid-item-4 z-10"
               >
-                <div className="mm-card mm-card-small card-3d h-full bg-gradient-to-br from-mm-purple to-mm-lavender text-white">
+                <motion.div
+                  whileHover={{ scale: 1.1, zIndex: 50 }}
+                  transition={{ duration: 0.2 }}
+                  className="mm-card mm-card-small h-full bg-gradient-to-br from-mm-purple to-mm-lavender text-white cursor-pointer"
+                >
                   <div className="flex flex-col h-full justify-between">
                     <div>
                       <Sparkles className="w-12 h-12 mb-4" />
@@ -264,7 +280,7 @@ export default function DashboardPage() {
                       <div className="text-lg mt-2 opacity-90">Excellent!</div>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </div>
           </div>
