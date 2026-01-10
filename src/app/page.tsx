@@ -112,8 +112,8 @@ export default function DashboardPage() {
 
         {/* SECTION 2: Your Finances - Mint Green Background with ZOOM */}
         <section ref={financesSectionRef} className="mm-section-mint mm-section-spacing perspective-container overflow-hidden relative">
-          {/* Logo Target - Top Left */}
-          <div data-logo-target="card" className="absolute left-1/4 top-1/3 w-64 h-64 pointer-events-none z-10" />
+          {/* Logo Target - CENTER (like MetaMask Fox) */}
+          <div data-logo-target="card" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none z-20" />
 
           <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative">
             {/* Headline with Zoom Animation */}
@@ -131,74 +131,122 @@ export default function DashboardPage() {
               </h2>
             </motion.div>
 
-            {/* Cards with MetaMask Zoom */}
-            <div className="mm-asymmetric-grid">
-              {/* Card 1: Total Balance - With 3D Rotation */}
-              <RotatingCard
-                initialRotation={-25}
-                finalRotation={5}
-                className="mm-grid-item-1 z-10"
-              >
-                <motion.div
-                  style={{ scale: financesCardScale }}
-                  initial={{ opacity: 0, x: -80, y: -60 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.1, zIndex: 50 }}
-                    transition={{ duration: 0.2 }}
-                    className="mm-card mm-card-medium h-full cursor-pointer"
-                  >
-                    <div className="flex flex-col h-full justify-between">
-                      <div>
-                        <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
-                          <Wallet className="w-8 h-8 text-mm-purple" />
-                        </div>
-                        <h3 className="text-2xl font-bold text-mm-black mb-2">Total Balance</h3>
-                      </div>
-                      <div>
-                        <div className="text-5xl font-bold text-mm-purple mb-3">
-                          <NumericFormat
-                            value={dashboardData.currentBalance}
-                            displayType="text"
-                            thousandSeparator=","
-                            prefix="₹"
-                            renderText={(value) => <span>{value}</span>}
-                          />
-                        </div>
-                        <div className="flex items-center gap-2 text-mm-green">
-                          <TrendingUp className="w-5 h-5" />
-                          <span className="font-semibold">+12% this month</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </RotatingCard>
+            {/* EXACT MetaMask 2-Column Grid */}
+            <div className="metamask-exact-grid">
 
-              {/* Card 2: Monthly Spent */}
-              <motion.div
-                style={{ scale: financesCardScale }}
-                initial={{ opacity: 0, x: 80, y: 60 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="mm-grid-item-2 z-10"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.1, zIndex: 50 }}
-                  transition={{ duration: 0.2 }}
-                  className="mm-card-colored mm-card-orange mm-card-tall h-full cursor-pointer"
-                >
-                  <div className="flex flex-col h-full justify-between">
+              {/* LEFT COLUMN - Purple Cards Stack */}
+              <div className="mm-left-column">
+                {/* Purple Card 1: Total Balance */}
+                <div className="mm-card-purple-top mm-card-hover cursor-pointer rounded-3xl p-8" style={{ backgroundColor: '#3C154E' }}>
+                  <div className="flex flex-col h-full justify-between mm-card-main-content">
                     <div>
-                      <div className="text-7xl mb-6">💸</div>
-                      <h3 className="text-3xl font-bold mb-3">Month Spent</h3>
+                      <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-4">
+                        <Wallet className="w-7 h-7 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white">Total Balance</h3>
                     </div>
                     <div>
-                      <div className="text-6xl font-bold mb-4">
+                      <div className="text-4xl font-bold text-white mb-2">
+                        <NumericFormat
+                          value={dashboardData.currentBalance}
+                          displayType="text"
+                          thousandSeparator=","
+                          prefix="₹"
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 text-emerald-300 text-sm">
+                        <TrendingUp className="w-4 h-4" />
+                        <span>+12% this month</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Hidden details - appears on hover */}
+                  <div className="mm-card-details">
+                    <div className="grid grid-cols-2 gap-3 text-white/90 text-sm">
+                      <div>
+                        <div className="text-white/60 text-xs">Available</div>
+                        <div className="font-semibold">₹38,200</div>
+                      </div>
+                      <div>
+                        <div className="text-white/60 text-xs">Pending</div>
+                        <div className="font-semibold">₹4,140</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Purple Card 2: Financial Score */}
+                <div className="mm-card-purple-bottom mm-card-hover cursor-pointer rounded-3xl p-6 bg-gradient-to-br from-purple-700 to-purple-900">
+                  <div className="flex items-center justify-between h-full mm-card-main-content">
+                    <div>
+                      <Sparkles className="w-10 h-10 text-white mb-2" />
+                      <h3 className="text-lg font-bold text-white">Financial Score</h3>
+                    </div>
+                    <div className="text-5xl font-bold text-white">{dashboardData.financialScore}</div>
+                  </div>
+
+                  {/* Hidden details */}
+                  <div className="mm-card-details">
+                    <div className="text-white/90 text-xs">
+                      <div className="flex justify-between">
+                        <span>Payment History</span>
+                        <span className="text-emerald-300">95%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* RIGHT COLUMN - Teal + Orange Stack */}
+              <div className="mm-right-column">
+                {/* Teal Card: Monthly Savings (Tall) */}
+                <div className="mm-card-teal-tall mm-card-hover cursor-pointer rounded-3xl p-8" style={{ background: '#0D4F4F' }}>
+                  <div className="flex flex-col h-full justify-between mm-card-main-content">
+                    <div>
+                      <div className="text-6xl mb-4">💰</div>
+                      <h3 className="text-2xl font-bold text-white mb-3">Monthly Savings</h3>
+                    </div>
+                    <div>
+                      <div className="text-4xl font-bold text-white mb-2">
+                        <NumericFormat
+                          value={dashboardData.monthSaved}
+                          displayType="text"
+                          thousandSeparator=","
+                          prefix="₹"
+                          renderText={(value) => <span>{value}</span>}
+                        />
+                      </div>
+                      <div className="text-3xl font-bold text-white">{dashboardData.savingsRate}%</div>
+                      <div className="text-sm text-white/80">Savings Rate</div>
+                    </div>
+                  </div>
+
+                  {/* Hidden details */}
+                  <div className="mm-card-details">
+                    <div className="text-white/90 text-sm space-y-2">
+                      <div className="flex justify-between">
+                        <span>Investments</span>
+                        <span className="font-semibold">₹15k</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Deposits</span>
+                        <span className="font-semibold">₹6k</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Orange Card: Month Spent (Wide) */}
+                <div className="mm-card-orange-wide mm-card-hover cursor-pointer rounded-3xl p-6" style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)' }}>
+                  <div className="flex items-center justify-between h-full mm-card-main-content">
+                    <div>
+                      <div className="text-5xl mb-2">💸</div>
+                      <h3 className="text-2xl font-bold text-white">Month Spent</h3>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-5xl font-bold text-white">
                         <NumericFormat
                           value={dashboardData.monthSpent}
                           displayType="text"
@@ -207,81 +255,22 @@ export default function DashboardPage() {
                           renderText={(value) => <span>{value}</span>}
                         />
                       </div>
-                      <div className="text-xl opacity-90">
-                        -8% from last month
-                      </div>
+                      <div className="text-sm text-white/80 mt-1">-8% from last month</div>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
 
-              {/* Card 3: Savings - With 3D Rotation */}
-              <RotatingCard
-                initialRotation={-20}
-                finalRotation={3}
-                className="mm-grid-item-3 z-10"
-              >
-                <motion.div
-                  style={{ scale: financesCardScale }}
-                  initial={{ opacity: 0, x: -60, y: 80 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.1, zIndex: 50 }}
-                    transition={{ duration: 0.2 }}
-                    className="mm-card-colored mm-card-green mm-card-wide h-full cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between h-full">
-                      <div>
-                        <div className="text-8xl mb-4">💰</div>
-                        <h3 className="text-3xl font-bold mb-2">Monthly Savings</h3>
-                        <div className="text-5xl font-bold">
-                          <NumericFormat
-                            value={dashboardData.monthSaved}
-                            displayType="text"
-                            thousandSeparator=","
-                            prefix="₹"
-                            renderText={(value) => <span>{value}</span>}
-                          />
-                        </div>
+                  {/* Hidden details */}
+                  <div className="mm-card-details">
+                    <div className="text-white/90 text-sm">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-white/70">Top Category</span>
                       </div>
-                      <div className="text-right">
-                        <div className="text-6xl font-bold">{dashboardData.savingsRate}%</div>
-                        <div className="text-xl mt-2">Savings Rate</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              </RotatingCard>
-
-              {/* Card 4: Financial Score */}
-              <motion.div
-                style={{ scale: financesCardScale }}
-                initial={{ opacity: 0, x: 60, y: 80 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="mm-grid-item-4 z-10"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.1, zIndex: 50 }}
-                  transition={{ duration: 0.2 }}
-                  className="mm-card mm-card-small h-full bg-gradient-to-br from-mm-purple to-mm-lavender text-white cursor-pointer"
-                >
-                  <div className="flex flex-col h-full justify-between">
-                    <div>
-                      <Sparkles className="w-12 h-12 mb-4" />
-                      <h3 className="text-xl font-bold mb-2">Financial Score</h3>
-                    </div>
-                    <div>
-                      <div className="text-7xl font-bold">{dashboardData.financialScore}</div>
-                      <div className="text-lg mt-2 opacity-90">Excellent!</div>
+                      <div className="font-bold text-lg">Food & Dining</div>
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -386,10 +375,10 @@ export default function DashboardPage() {
               </motion.div>
             ))}
           </div>
-        </section>
+        </section >
 
         {/* SECTION 4: Features - Orange Background with ZOOM */}
-        <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing relative">
+        <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing relative" >
           {/* Logo Target - Top Right Corner */}
           <div data-logo-target="features" className="absolute right-1/4 top-1/4 w-56 h-56 pointer-events-none z-10" />
 
@@ -428,10 +417,10 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section >
 
         {/* SECTION 5: CTA - Cream Background */}
-        <section className="mm-section-cream mm-section-spacing relative">
+        <section className="mm-section-cream mm-section-spacing relative" >
           {/* Logo Target - Center Left */}
           <div data-logo-target="cta" className="absolute left-1/3 top-1/2 -translate-y-1/2 w-32 h-32 pointer-events-none z-10" />
 
@@ -452,8 +441,8 @@ export default function DashboardPage() {
               </button>
             </motion.div>
           </div>
-        </section>
-      </div>
+        </section >
+      </div >
     </>
   );
 }
