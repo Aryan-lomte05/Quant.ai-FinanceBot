@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
 import { ShoppingBag, Utensils, Car, Home, Heart, Zap, TrendingUp } from 'lucide-react';
+import { mockData } from '@/lib/api/mock-data';
 
 interface SpendingCategory {
     name: string;
@@ -18,52 +19,37 @@ export function SpendingDonutChart() {
     const PieComponent = Pie as any;
     const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
-    // Mock spending data by category
-    const totalSpending = 42500;
-    const data: SpendingCategory[] = [
-        {
-            name: 'Shopping',
-            value: 12500,
-            color: '#EC4899',
-            icon: ShoppingBag,
-            percentage: (12500 / totalSpending) * 100,
-        },
-        {
-            name: 'Food & Dining',
-            value: 8500,
-            color: '#F59E0B',
-            icon: Utensils,
-            percentage: (8500 / totalSpending) * 100,
-        },
-        {
-            name: 'Transportation',
-            value: 6200,
-            color: '#3B82F6',
-            icon: Car,
-            percentage: (6200 / totalSpending) * 100,
-        },
-        {
-            name: 'Bills & Utilities',
-            value: 7800,
-            color: '#10B981',
-            icon: Zap,
-            percentage: (7800 / totalSpending) * 100,
-        },
-        {
-            name: 'Housing',
-            value: 5000,
-            color: '#8B5CF6',
-            icon: Home,
-            percentage: (5000 / totalSpending) * 100,
-        },
-        {
-            name: 'Healthcare',
-            value: 2500,
-            color: '#EF4444',
-            icon: Heart,
-            percentage: (2500 / totalSpending) * 100,
-        },
-    ];
+
+
+    // Map centralized mock data to chart format
+    const totalSpending = mockData.dashboardSummary.monthSpent;
+
+    // Map icons and colors to categories
+    const getCategoryDetails = (category: string) => {
+        switch (category) {
+            case 'Shopping': return { icon: ShoppingBag, color: '#EC4899' };
+            case 'Food & Dining': return { icon: Utensils, color: '#F59E0B' };
+            case 'Transport': return { icon: Car, color: '#3B82F6' };
+            case 'Bills & Utilities': return { icon: Zap, color: '#10B981' }; // Using Green for Utilities
+            case 'Housing': return { icon: Home, color: '#8B5CF6' };
+            case 'Healthcare': return { icon: Heart, color: '#EF4444' };
+            default: return { icon: TrendingUp, color: '#6B7280' };
+        }
+    };
+
+    const data: SpendingCategory[] = mockData.budget.allocations
+        .filter(a => a.spent > 0) // Only show categories with spending
+        .slice(0, 6) // Limit to top 6 for cleaner UI
+        .map(allocation => {
+            const details = getCategoryDetails(allocation.category);
+            return {
+                name: allocation.category,
+                value: allocation.spent,
+                color: details.color,
+                icon: details.icon,
+                percentage: (allocation.spent / totalSpending) * 100
+            };
+        });
 
     // Custom active shape that "explodes" outward
     const renderActiveShape = (props: any) => {

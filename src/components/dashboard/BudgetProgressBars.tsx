@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ShoppingBag, Utensils, Car, Home, Heart, Zap, TrendingUp, AlertTriangle } from 'lucide-react';
+import { mockData } from '@/lib/api/mock-data';
 
 interface BudgetCategory {
     id: string;
@@ -14,62 +15,30 @@ interface BudgetCategory {
 }
 
 export function BudgetProgressBars() {
-    const budgets: BudgetCategory[] = [
-        {
-            id: '1',
-            name: 'Shopping',
-            spent: 12500,
-            budget: 15000,
-            icon: ShoppingBag,
-            color: '#EC4899',
-            gradient: 'from-pink-500 to-rose-600',
-        },
-        {
-            id: '2',
-            name: 'Food & Dining',
-            spent: 8500,
-            budget: 10000,
-            icon: Utensils,
-            color: '#F59E0B',
-            gradient: 'from-orange-500 to-amber-600',
-        },
-        {
-            id: '3',
-            name: 'Transportation',
-            spent: 7200,
-            budget: 8000,
-            icon: Car,
-            color: '#3B82F6',
-            gradient: 'from-blue-500 to-cyan-600',
-        },
-        {
-            id: '4',
-            name: 'Bills & Utilities',
-            spent: 5800,
-            budget: 6000,
-            icon: Zap,
-            color: '#10B981',
-            gradient: 'from-emerald-500 to-green-600',
-        },
-        {
-            id: '5',
-            name: 'Housing',
-            spent: 4000,
-            budget: 5000,
-            icon: Home,
-            color: '#8B5CF6',
-            gradient: 'from-purple-500 to-violet-600',
-        },
-        {
-            id: '6',
-            name: 'Healthcare',
-            spent: 1500,
-            budget: 3000,
-            icon: Heart,
-            color: '#EF4444',
-            gradient: 'from-red-500 to-pink-600',
-        },
-    ];
+    const getCategoryStyles = (category: string) => {
+        switch (category) {
+            case 'Shopping': return { icon: ShoppingBag, color: '#EC4899', gradient: 'from-pink-500 to-rose-600' };
+            case 'Food & Dining': return { icon: Utensils, color: '#F59E0B', gradient: 'from-orange-500 to-amber-600' };
+            case 'Transport': return { icon: Car, color: '#3B82F6', gradient: 'from-blue-500 to-cyan-600' };
+            case 'Bills & Utilities': return { icon: Zap, color: '#10B981', gradient: 'from-emerald-500 to-green-600' };
+            case 'Housing': return { icon: Home, color: '#8B5CF6', gradient: 'from-purple-500 to-violet-600' };
+            case 'Healthcare': return { icon: Heart, color: '#EF4444', gradient: 'from-red-500 to-pink-600' };
+            default: return { icon: TrendingUp, color: '#6B7280', gradient: 'from-gray-500 to-gray-600' };
+        }
+    };
+
+    const budgets: BudgetCategory[] = mockData.budget.allocations.slice(0, 6).map((allocation, index) => {
+        const styles = getCategoryStyles(allocation.category);
+        return {
+            id: String(index + 1),
+            name: allocation.category,
+            spent: allocation.spent,
+            budget: allocation.allocated,
+            icon: styles.icon,
+            color: styles.color,
+            gradient: styles.gradient
+        };
+    });
 
     const getStatusColor = (percentage: number) => {
         if (percentage < 70) return 'text-emerald-600';
