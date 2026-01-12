@@ -5,9 +5,8 @@ import { Button } from "@/components/ui/button";
 
 export function ReceiptScanner() {
     return (
-        <Button variant="outline" className="w-full">
-            <Camera className="w-4 h-4 mr-2" />
-            Scan Receipt
+        <Button variant="outline" size="icon" className="h-[5rem] w-[5rem] min-h-[5rem] min-w-[5rem] rounded-2xl bg-white/20 border-white/40 hover:bg-white/30 backdrop-blur-sm">
+            <Camera className="w-7 h-7" />
         </Button>
     );
 }
