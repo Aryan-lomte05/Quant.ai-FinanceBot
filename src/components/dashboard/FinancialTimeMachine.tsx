@@ -2,31 +2,20 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, TrendingUp, TrendingDown, Calendar, ArrowRight, Zap, PiggyBank, Wallet } from 'lucide-react';
+import { Clock, TrendingUp, TrendingDown, ArrowRight, Zap, PiggyBank, Wallet, ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockData } from '@/lib/api/mock-data';
 
 interface TimeComparison {
     period: string;
     label: string;
-    current: {
-        income: number;
-        expenses: number;
-        savings: number;
-        balance: number;
-    };
-    past: {
-        income: number;
-        expenses: number;
-        savings: number;
-        balance: number;
-    };
+    current: { income: number; expenses: number; savings: number; balance: number; };
+    past: { income: number; expenses: number; savings: number; balance: number; };
 }
 
 export function FinancialTimeMachine() {
     const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'quarter' | 'year'>('month');
-
+    const [currentPage, setCurrentPage] = useState(0);
     const comparisons: Record<string, TimeComparison> = mockData.financialHistory as any;
-
     const data = comparisons[selectedPeriod];
 
     const calculateChange = (current: number, past: number) => {
@@ -35,80 +24,63 @@ export function FinancialTimeMachine() {
         return { change, percentage, isPositive: change >= 0 };
     };
 
-    const metrics = [
-        {
-            name: 'Income',
-            current: data.current.income,
-            past: data.past.income,
-            icon: TrendingUp,
-            color: 'emerald',
-            gradient: 'from-emerald-500 to-green-600',
-            goodDirection: 'up',
-        },
-        {
-            name: 'Expenses',
-            current: data.current.expenses,
-            past: data.past.expenses,
-            icon: Wallet,
-            color: 'red',
-            gradient: 'from-red-500 to-rose-600',
-            goodDirection: 'down',
-        },
-        {
-            name: 'Savings',
-            current: data.current.savings,
-            past: data.past.savings,
-            icon: PiggyBank,
-            color: 'blue',
-            gradient: 'from-blue-500 to-cyan-600',
-            goodDirection: 'up',
-        },
-        {
-            name: 'Balance',
-            current: data.current.balance,
-            past: data.past.balance,
-            icon: Zap,
-            color: 'purple',
-            gradient: 'from-purple-500 to-pink-600',
-            goodDirection: 'up',
-        },
+    const allMetrics = [
+        { name: 'Income', current: data.current.income, past: data.past.income, icon: TrendingUp, color: 'bg-emerald-500', barColor: 'bg-emerald-400', goodDirection: 'up' },
+        { name: 'Expenses', current: data.current.expenses, past: data.past.expenses, icon: Wallet, color: 'bg-rose-500', barColor: 'bg-rose-400', goodDirection: 'down' },
+        { name: 'Savings', current: data.current.savings, past: data.past.savings, icon: PiggyBank, color: 'bg-cyan-500', barColor: 'bg-cyan-400', goodDirection: 'up' },
+        { name: 'Balance', current: data.current.balance, past: data.past.balance, icon: Zap, color: 'bg-amber-500', barColor: 'bg-amber-400', goodDirection: 'up' },
     ];
+
+    // Show 4 metrics per page
+    const totalPages = Math.ceil(allMetrics.length / 4);
+    const metrics = allMetrics.slice(currentPage * 4, (currentPage + 1) * 4);
+
+    const handlePrev = () => {
+        setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1));
+    };
+
+    const handleNext = () => {
+        setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0));
+    };
 
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="backdrop-blur-xl bg-white/70 rounded-2xl shadow-xl border border-white/50 p-6"
+            whileHover={{ scale: 1.02, y: -5 }}
+            className="relative rounded-3xl overflow-hidden p-6 h-full"
+            style={{
+                background: 'linear-gradient(145deg, #0F766E 0%, #0D9488 100%)',
+                boxShadow: '0 20px 50px rgba(13, 148, 136, 0.3)'
+            }}
         >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg relative">
+                    <motion.div
+                        initial={{ scale: 0, rotate: -180 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.3, type: 'spring' }}
+                        className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center"
+                    >
                         <Clock className="w-6 h-6 text-white" />
-                        <motion.div
-                            className="absolute inset-0 rounded-xl bg-white"
-                            animate={{ opacity: [0, 0.3, 0] }}
-                            transition={{ repeat: Infinity, duration: 2 }}
-                        />
-                    </div>
+                    </motion.div>
                     <div>
-                        <h3 className="text-xl font-bold text-gray-900">Financial Time Machine</h3>
-                        <p className="text-sm text-gray-500">Compare your financial journey</p>
+                        <h3 className="text-xl font-black text-white">Time Machine</h3>
+                        <p className="text-sm text-teal-100">Compare your journey</p>
                     </div>
                 </div>
 
-                {/* Period Selector */}
-                <div className="flex items-center gap-2 p-1 bg-gray-100 rounded-xl">
+                <div className="flex items-center gap-1 p-1 bg-white/20 rounded-xl">
                     {(['month', 'quarter', 'year'] as const).map((period) => (
                         <motion.button
                             key={period}
                             onClick={() => setSelectedPeriod(period)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${selectedPeriod === period
-                                ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg'
-                                : 'text-gray-600 hover:bg-white'
+                            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${selectedPeriod === period
+                                ? 'bg-white text-teal-700'
+                                : 'text-white/80 hover:text-white'
                                 }`}
                         >
                             {period === 'month' ? '1M' : period === 'quarter' ? '3M' : '1Y'}
@@ -121,34 +93,28 @@ export function FinancialTimeMachine() {
             <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex items-center justify-center gap-2 mb-6"
+                transition={{ delay: 0.4 }}
+                className="flex items-center justify-center gap-3 mb-6"
             >
-                <div className="px-4 py-2 bg-indigo-50 rounded-lg border border-indigo-200">
-                    <span className="text-sm font-semibold text-indigo-700">
-                        Current {data.period}
-                    </span>
+                <div className="px-3 py-1.5 bg-white/20 rounded-lg">
+                    <span className="text-sm font-semibold text-white">Current {data.period}</span>
                 </div>
-                <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                >
-                    <ArrowRight className="w-5 h-5 text-gray-400" />
+                <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                    <ArrowRight className="w-4 h-4 text-teal-200" />
                 </motion.div>
-                <div className="px-4 py-2 bg-gray-100 rounded-lg border border-gray-200">
-                    <span className="text-sm font-semibold text-gray-600">{data.label}</span>
+                <div className="px-3 py-1.5 bg-white/10 rounded-lg">
+                    <span className="text-sm text-teal-100">{data.label}</span>
                 </div>
             </motion.div>
 
             {/* Metrics Grid */}
             <AnimatePresence mode="wait">
                 <motion.div
-                    key={selectedPeriod}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3 }}
-                    className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
+                    key={`${selectedPeriod}-${currentPage}`}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="grid grid-cols-2 gap-3"
                 >
                     {metrics.map((metric, index) => {
                         const Icon = metric.icon;
@@ -160,83 +126,39 @@ export function FinancialTimeMachine() {
                                 key={metric.name}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.7 + index * 0.1 }}
-                                whileHover={{ y: -3, scale: 1.02 }}
-                                className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-gray-200 hover:border-gray-300 transition-all group"
+                                transition={{ delay: 0.1 + index * 0.1 }}
+                                whileHover={{ y: -3 }}
+                                className="p-4 bg-white rounded-2xl"
                             >
-                                {/* Header */}
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-3">
-                                        <motion.div
-                                            className={`w-11 h-11 rounded-xl bg-gradient-to-br ${metric.gradient} flex items-center justify-center shadow-lg`}
-                                            whileHover={{ rotate: 10, scale: 1.1 }}
-                                        >
-                                            <Icon className="w-5 h-5 text-white" />
-                                        </motion.div>
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-600">{metric.name}</p>
-                                        </div>
-                                    </div>
-
-                                    {/* Change Badge */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <motion.div
+                                        whileHover={{ rotate: 360 }}
+                                        transition={{ duration: 0.5 }}
+                                        className={`w-9 h-9 rounded-xl ${metric.color} flex items-center justify-center`}
+                                    >
+                                        <Icon className="w-4 h-4 text-white" />
+                                    </motion.div>
                                     <motion.div
                                         initial={{ scale: 0 }}
                                         animate={{ scale: 1 }}
-                                        transition={{ delay: 0.9 + index * 0.1, type: 'spring' }}
-                                        className={`flex items-center gap-1 px-2.5 py-1 rounded-full ${isGood
-                                            ? 'bg-emerald-100 text-emerald-700'
-                                            : 'bg-red-100 text-red-700'
-                                            }`}
+                                        transition={{ delay: 0.2 + index * 0.1, type: 'spring' }}
+                                        className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${isGood ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}
                                     >
-                                        {change.isPositive ? (
-                                            <TrendingUp className="w-3.5 h-3.5" />
-                                        ) : (
-                                            <TrendingDown className="w-3.5 h-3.5" />
-                                        )}
-                                        <span className="text-xs font-bold">{change.percentage}%</span>
+                                        {change.isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                        {change.percentage}%
                                     </motion.div>
                                 </div>
 
-                                {/* Values Comparison */}
-                                <div className="space-y-3">
-                                    {/* Current Value */}
-                                    <div>
-                                        <p className="text-xs text-gray-500 mb-1">Current</p>
-                                        <p className="text-2xl font-black text-gray-900">
-                                            ₹{metric.current.toLocaleString('en-IN')}
-                                        </p>
-                                    </div>
+                                <p className="text-xs text-gray-500 mb-1">{metric.name}</p>
+                                <p className="text-xl font-black text-gray-900">₹{metric.current.toLocaleString('en-IN')}</p>
 
-                                    {/* Progress Bar */}
-                                    <div className="relative">
-                                        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <motion.div
-                                                initial={{ width: 0 }}
-                                                animate={{ width: `${Math.min((metric.current / Math.max(metric.current, metric.past)) * 100, 100)}%` }}
-                                                transition={{ duration: 1, delay: 1 + index * 0.1 }}
-                                                className={`h-full bg-gradient-to-r ${metric.gradient} rounded-full`}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Past Value */}
-                                    <div className="flex items-center justify-between">
-                                        <p className="text-xs text-gray-500">Previous</p>
-                                        <p className="text-sm font-bold text-gray-600">
-                                            ₹{metric.past.toLocaleString('en-IN')}
-                                        </p>
-                                    </div>
-
-                                    {/* Change Amount */}
-                                    <div className={`pt-2 border-t border-gray-200`}>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600 font-medium">Change</span>
-                                            <span className={`text-sm font-bold ${change.isPositive ? 'text-emerald-600' : 'text-red-600'
-                                                }`}>
-                                                {change.isPositive ? '+' : ''}₹{Math.abs(change.change).toLocaleString('en-IN')}
-                                            </span>
-                                        </div>
-                                    </div>
+                                <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden mt-2">
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: `${Math.min((metric.current / Math.max(metric.current, metric.past)) * 100, 100)}%` }}
+                                        transition={{ duration: 1, delay: 0.3 + index * 0.1 }}
+                                        className={`h-full ${metric.barColor} rounded-full`}
+                                    />
                                 </div>
                             </motion.div>
                         );
@@ -244,42 +166,36 @@ export function FinancialTimeMachine() {
                 </motion.div>
             </AnimatePresence>
 
-            {/* Summary Insight */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5 }}
-                className="p-5 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-200"
-            >
-                <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <Calendar className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                        <h4 className="font-bold text-gray-900 mb-2">Time Travel Summary</h4>
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                            {calculateChange(data.current.balance, data.past.balance).isPositive ? (
-                                <>
-                                    <span className="font-semibold text-emerald-600">Great progress!</span> Your net worth increased by{' '}
-                                    <span className="font-bold text-indigo-600">
-                                        ₹{Math.abs(calculateChange(data.current.balance, data.past.balance).change).toLocaleString('en-IN')}
-                                    </span>{' '}
-                                    ({calculateChange(data.current.balance, data.past.balance).percentage}%) in the past {data.period.toLowerCase()}.
-                                    Keep up the excellent work! 🚀
-                                </>
-                            ) : (
-                                <>
-                                    Your balance decreased by{' '}
-                                    <span className="font-bold text-red-600">
-                                        ₹{Math.abs(calculateChange(data.current.balance, data.past.balance).change).toLocaleString('en-IN')}
-                                    </span>
-                                    . Focus on increasing income and reducing expenses. 💪
-                                </>
-                            )}
-                        </p>
-                    </div>
+            {/* Navigation */}
+            <div className="flex items-center justify-center gap-4 mt-6">
+                <motion.button
+                    onClick={handlePrev}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
+                >
+                    <ChevronLeft className="w-4 h-4" />
+                </motion.button>
+                <div className="flex gap-2">
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className={`w-2 h-2 rounded-full transition-colors ${i === currentPage ? 'bg-white' : 'bg-white/40'}`}
+                            whileHover={{ scale: 1.2 }}
+                            onClick={() => setCurrentPage(i)}
+                            style={{ cursor: 'pointer' }}
+                        />
+                    ))}
                 </div>
-            </motion.div>
+                <motion.button
+                    onClick={handleNext}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center text-white transition-colors"
+                >
+                    <ChevronRight className="w-4 h-4" />
+                </motion.button>
+            </div>
         </motion.div>
     );
 }

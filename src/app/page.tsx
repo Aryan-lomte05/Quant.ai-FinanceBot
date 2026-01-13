@@ -5,6 +5,7 @@ import { HeroSection } from "@/components/metamask-ui/HeroSection";
 import { Logo3D } from "@/components/shared/Logo3D";
 import { OpeningAnimation } from "@/components/animations/OpeningAnimation";
 import { RotatingCard } from "@/components/animations/RotatingCard";
+import BounceDashboardCards from "@/components/animations/BounceDashboardCards";
 import { SpendingSparkline } from "@/components/dashboard/SpendingSparkline";
 import { BudgetHealthGauge } from "@/components/dashboard/BudgetHealthGauge";
 import { UpcomingBillsCarousel } from "@/components/dashboard/UpcomingBillsCarousel";
@@ -275,47 +276,54 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* SECTION 3: Analytics - Cream Background with ZOOM */}
-        <section ref={analyticsSectionRef} className="mm-section-cream mm-section-spacing relative">
+        {/* SECTION 3: Analytics - Orange Background with Scroll Transition */}
+        <motion.section
+          ref={analyticsSectionRef}
+          className="mm-section-spacing relative overflow-hidden"
+          style={{
+            background: useTransform(
+              analyticsProgress,
+              [0, 0.3, 0.5],
+              ['#FFF7ED', '#FFBC80', '#FFB07A']
+            )
+          }}
+        >
+          {/* Animated Background Gradient Overlay */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              opacity: useTransform(analyticsProgress, [0, 0.3], [0, 1]),
+              background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.3) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(255,200,150,0.3) 0%, transparent 50%)'
+            }}
+          />
+
           {/* Logo Target - Bottom Right */}
           <div data-logo-target="analytics" className="absolute right-1/3 bottom-1/4 w-48 h-48 pointer-events-none z-10" />
 
-          <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
-            {/* Grid of Charts with Zoom */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-              <motion.div
-                style={{ scale: analyticsCardScale }}
-                initial={{ opacity: 0, x: -60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                className="card-3d"
-              >
-                <SpendingSparkline data={spendingData} />
-              </motion.div>
-
-              <motion.div
-                style={{ scale: analyticsCardScale }}
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                className="card-3d"
-              >
-                <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
-              </motion.div>
-            </div>
-
+          <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative z-10">
+            {/* Section Title */}
             <motion.div
-              style={{ scale: analyticsCardScale }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="mb-12"
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-12"
             >
-              <UpcomingBillsCarousel />
+              <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Your Financial Dashboard</h2>
+              <p className="text-xl text-gray-700">Track, analyze, and optimize your spending</p>
             </motion.div>
+
+            {/* 3-Column Dashboard Cards with Bounce Animation */}
+            <BounceDashboardCards
+              enableHover
+              initialRotations={[-3, 0, 3]}
+              initialTranslateX={[-20, 0, 20]}
+              pushDistance={60}
+            >
+              <SpendingSparkline data={spendingData} />
+              <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
+              <UpcomingBillsCarousel />
+            </BounceDashboardCards>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               <motion.div
@@ -352,33 +360,128 @@ export default function DashboardPage() {
               <BudgetProgressBars />
             </motion.div>
 
-            {[
-              <EmergencyFundBarometer key="emergency" />,
-              <SpendingInsights key="insights" />,
-              <FinancialTimeMachine key="timemachine" />,
-              <TaxOptimizerDashboard key="tax" />
-            ].map((component, index) => (
-              <motion.div
-                key={index}
-                style={{ scale: analyticsCardScale }}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{
-                  duration: 0.7,
-                  delay: index * 0.1,
-                  ease: [0.16, 1, 0.3, 1]
-                }}
-                className="mb-12 last:mb-0"
-              >
-                {component}
-              </motion.div>
-            ))}
+            {/* Emergency Fund only */}
+            <motion.div
+              style={{ scale: analyticsCardScale }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              className="mb-12"
+            >
+              <EmergencyFundBarometer />
+            </motion.div>
           </div>
-        </section >
+        </motion.section>
+
+        {/* NEW SECTION: Insights - Lavender Pink MetaMask Background with Stacking Animation */}
+        <motion.section
+          className="mm-section-spacing relative overflow-hidden py-20 -mt-8"
+          initial={{ opacity: 0, y: 100, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            background: 'linear-gradient(180deg, #F5E6FA 0%, #EDD9F5 50%, #F5E6FA 100%)',
+            borderRadius: '48px 48px 0 0',
+            boxShadow: '0 -20px 60px rgba(139, 92, 246, 0.15)',
+            position: 'relative',
+            zIndex: 10,
+          }}
+        >
+          {/* Animated Background Elements */}
+          <motion.div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at 20% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.06) 0%, transparent 50%)'
+            }}
+          />
+
+          {/* Floating orbs */}
+          <motion.div
+            className="absolute top-20 left-10 w-32 h-32 bg-purple-400/10 rounded-full blur-3xl"
+            animate={{ y: [0, -30, 0], scale: [1, 1.2, 1] }}
+            transition={{ duration: 8, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-10 w-40 h-40 bg-violet-400/10 rounded-full blur-3xl"
+            animate={{ y: [0, 30, 0], scale: [1.2, 1, 1.2] }}
+            transition={{ duration: 10, repeat: Infinity }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-fuchsia-400/5 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 6, repeat: Infinity }}
+          />
+
+          <div className="mm-container px-8 w-full max-w-7xl mx-auto relative z-10">
+            {/* Section Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-16"
+            >
+              <motion.h2
+                className="text-4xl md:text-5xl font-black text-[#3D2F5B] mb-4"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                AI-Powered Insights
+              </motion.h2>
+              <motion.p
+                className="text-xl text-[#5B4A7A]"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+              >
+                Smart analysis to optimize your finances
+              </motion.p>
+            </motion.div>
+
+            {/* Insights Grid with Stacking Card Animation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <motion.div
+                initial={{ opacity: 0, y: 80, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                style={{ transformOrigin: 'center top' }}
+              >
+                <SpendingInsights />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 80, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                style={{ transformOrigin: 'center top' }}
+              >
+                <FinancialTimeMachine />
+              </motion.div>
+            </div>
+
+            {/* Tax Optimizer - Full Width with Stacking Animation */}
+            <motion.div
+              initial={{ opacity: 0, y: 80, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{ transformOrigin: 'center top' }}
+              className="mt-12"
+            >
+              <TaxOptimizerDashboard />
+            </motion.div>
+          </div>
+        </motion.section>
 
         {/* SECTION 4: Features - Orange Background with ZOOM */}
-        <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing relative" >
+        <section ref={featuresSectionRef} className="mm-section-orange mm-section-spacing relative">
           {/* Logo Target - Top Right Corner */}
           <div data-logo-target="features" className="absolute right-1/4 top-1/4 w-56 h-56 pointer-events-none z-10" />
 
@@ -417,10 +520,10 @@ export default function DashboardPage() {
               ))}
             </div>
           </div>
-        </section >
+        </section>
 
         {/* SECTION 5: CTA - Cream Background */}
-        <section className="mm-section-cream mm-section-spacing relative" >
+        <section className="mm-section-cream mm-section-spacing relative">
           {/* Logo Target - Center Left */}
           <div data-logo-target="cta" className="absolute left-1/3 top-1/2 -translate-y-1/2 w-32 h-32 pointer-events-none z-10" />
 
@@ -441,8 +544,8 @@ export default function DashboardPage() {
               </button>
             </motion.div>
           </div>
-        </section >
-      </div >
+        </section>
+      </div>
     </>
   );
 }
