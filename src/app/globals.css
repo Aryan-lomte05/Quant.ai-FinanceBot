@@ -5,6 +5,7 @@
 @import '../styles/card-enhancements.css';
 @import '../styles/metamask-grid.css';
 @import '../styles/card-hover-expand.css';
+@import '../styles/chat-page.css';
 
 @tailwind base;
 @tailwind components;
@@ -197,6 +198,7 @@ html.lenis {
 }
 
 @media (min-width: 768px) {
+
   .mm-section-mint,
   .mm-section-cream,
   .mm-section-orange,
@@ -226,9 +228,19 @@ html.lenis {
 
 /* Playful coin wiggle animation */
 @keyframes coin-wiggle {
-  0%, 100% { transform: rotate(0deg) scale(1); }
-  25% { transform: rotate(-10deg) scale(1.1); }
-  75% { transform: rotate(10deg) scale(1.1); }
+
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  75% {
+    transform: rotate(10deg) scale(1.1);
+  }
 }
 
 .coin-wiggle:hover {
@@ -237,8 +249,17 @@ html.lenis {
 
 /* Sparkle effect on hover */
 @keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(180deg);
+  }
 }
 
 .sparkle-on-hover::after {
@@ -266,8 +287,15 @@ html.lenis {
 
 /* Stat card pulse on value change */
 @keyframes stat-pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .stat-pulse {
@@ -280,22 +308,33 @@ html.lenis {
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Gradient shimmer effect */
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 .gradient-shimmer {
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255,255,255,0.3) 50%, 
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%);
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
@@ -309,18 +348,23 @@ html.lenis {
 /* ============================================
    LENIS SMOOTH SCROLL
    ============================================ */
-html.lenis, html.lenis body {
+html.lenis,
+html.lenis body {
   height: auto;
 }
+
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
+
 .lenis.lenis-smooth [data-lenis-prevent] {
   overscroll-behavior: contain;
 }
+
 .lenis.lenis-stopped {
   overflow: hidden;
 }
+
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }

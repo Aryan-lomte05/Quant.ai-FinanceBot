@@ -5,13 +5,11 @@ import { ChatBubble } from '@/components/chat/ChatBubble';
 import { SuggestedQueries } from '@/components/chat/SuggestedQueries';
 import { VoiceRecorder } from '@/components/chat/VoiceRecorder';
 import { TypingIndicator } from '@/components/chat/TypingIndicator';
+import { FinanceAdvisor3D } from '@/components/chat/FinanceAdvisor3D';
 import { ChatMessage } from '@/lib/types/chat';
-import { Send, Sparkles, Camera } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { Logo3D } from '@/components/shared/Logo3D';
+import { Send, Mic, Camera, TrendingUp, PiggyBank, Target, AlertCircle } from 'lucide-react';
 
-// Mock AI Responses - keeping existing logic
+// Mock AI Responses
 const getAIResponse = (userMessage: string): ChatMessage => {
     const lowerMsg = userMessage.toLowerCase();
 
@@ -77,6 +75,13 @@ What would you like to know about your finances?`,
     };
 };
 
+// Quick Action Items
+const quickActions = [
+    { id: 'budget', label: 'Check my budget', icon: PiggyBank },
+    { id: 'invest', label: 'Investment Tips', icon: TrendingUp, emergency: false },
+    { id: 'goals', label: 'My Savings Goals', icon: Target },
+];
+
 export default function ChatPage() {
     const [messages, setMessages] = useState<ChatMessage[]>([
         {
@@ -91,21 +96,9 @@ I've analyzed your spending and have some insights. What would you like to know?
     ]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    // Scroll animations for hero
-    const heroRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: heroRef,
-        offset: ["start end", "end start"]
-    });
-
-    const textScale = useSpring(
-        useTransform(scrollYProgress, [0, 0.4, 0.8, 1], [0.5, 0.75, 0.95, 1.0]),
-        { stiffness: 100, damping: 30 }
-    );
-    const textOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0.5]);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -131,6 +124,10 @@ I've analyzed your spending and have some insights. What would you like to know?
             const aiResponse = getAIResponse(messageText);
             setMessages(prev => [...prev, aiResponse]);
             setIsTyping(false);
+
+            // Trigger speaking animation when AI responds
+            setIsSpeaking(true);
+            setTimeout(() => setIsSpeaking(false), 3000); // Speak for 3 seconds
         }, 1500 + Math.random() * 1000);
     };
 
@@ -143,113 +140,126 @@ I've analyzed your spending and have some insights. What would you like to know?
         setTimeout(() => handleSend(transcript), 500);
     };
 
+    const handleQuickAction = (actionId: string) => {
+        const actionMessages: Record<string, string> = {
+            budget: "What's my current budget status?",
+            invest: "Give me some investment tips",
+            goals: "Show me my savings goals",
+        };
+        handleSend(actionMessages[actionId] || actionId);
+    };
+
     return (
-        <>
-            {/* Fullscreen 3D Logo Canvas */}
-            <Logo3D />
+        <div className="chat-page-bg">
+            <div className="chat-split-layout">
+                {/* Left Side - Chat Area */}
+                <div className="chat-area">
+                    {/* Messages Container */}
+                    <div className="chat-messages-container">
+                        {messages.map((message) => (
+                            <div
+                                key={message.id}
+                                className={message.role === 'user' ? 'chat-bubble-user' : 'chat-bubble-assistant'}
+                            >
+                                <div dangerouslySetInnerHTML={{
+                                    __html: message.content
+                                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                        .replace(/\n/g, '<br/>')
+                                }} />
 
-            <div className="space-y-0">
-                {/* SECTION 1: Hero - Mint Background */}
-                <section ref={heroRef} className="mm-section-mint mm-section-spacing relative perspective-container overflow-hidden">
-                    {/* Logo Target - Top Center */}
-                    <div data-logo-target="chat-hero" className="absolute left-1/2 top-1/4 -translate-x-1/2 w-64 h-64 pointer-events-none z-10" />
-                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto text-center">
-                        <motion.div
-                            style={{
-                                scale: textScale,
-                                opacity: textOpacity
-                            }}
-                            className="mb-8"
-                        >
-                            <h1 className="mm-section-heading text-center">
-                                YOUR AI
-                                <br />
-                                FINANCE BUDDY
-                            </h1>
-                            <p className="text-xl text-gray-700 mt-6 max-w-2xl mx-auto">
-                                Powered by Phi-3.5 • Real-time insights • Smart recommendations
-                            </p>
-                        </motion.div>
-                    </div>
-                </section>
-
-                {/* SECTION 2: Chat Interface - Cream Background */}
-                <section className="mm-section-cream mm-section-spacing relative">
-                    {/* Logo Target - Center Right */}
-                    <div data-logo-target="chat-interface" className="absolute right-1/4 top-1/2 -translate-y-1/2 w-56 h-56 pointer-events-none z-10" />
-                    <div className="mm-container px-8 py-16 w-full max-w-5xl mx-auto">
-                        <div className="flex flex-col h-[600px] relative">
-                            {/* Chat Header */}
-                            <div className="mb-6 glass p-4 rounded-2xl border-2 border-white/50">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 bg-gradient-to-br from-mm-purple to-mm-lavender rounded-full flex items-center justify-center">
-                                        <Sparkles className="w-6 h-6 text-white" />
+                                {/* Language indicator for assistant */}
+                                {message.role === 'assistant' && (
+                                    <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/10">
+                                        <span className="text-xs text-white/50">English</span>
+                                        <button className="text-xs text-white/50 hover:text-white/80 transition-colors">
+                                            🔊
+                                        </button>
                                     </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-mm-black">AI Bandhu</h2>
-                                        <p className="text-sm text-gray-600">Your financial assistant • Powered by Phi-3.5</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Messages */}
-                            <div className="flex-1 overflow-y-auto custom-scrollbar px-2 mm-card card-3d p-6 rounded-3xl">
-                                {messages.map((message) => (
-                                    <ChatBubble key={message.id} message={message} onAction={handleAction} />
-                                ))}
-
-                                {isTyping && <TypingIndicator />}
-
-                                <div ref={messagesEndRef} />
-                            </div>
-
-                            {/* Input Area */}
-                            <div className="mt-6 space-y-4">
-                                {/* Suggested Queries */}
-                                {messages.length <= 1 && !isTyping && (
-                                    <SuggestedQueries onSelect={handleSend} disabled={isTyping} />
                                 )}
-
-                                {/* Input Box */}
-                                <div className="glass p-4 rounded-2xl border-2 border-white/50">
-                                    <div className="flex gap-3 items-end">
-                                        <Button variant="ghost" size="icon" className="hover:bg-mm-green/10 flex-shrink-0">
-                                            <Camera className="w-5 h-5 text-gray-600" />
-                                        </Button>
-
-                                        <div className="flex-1">
-                                            <input
-                                                ref={inputRef}
-                                                type="text"
-                                                value={input}
-                                                onChange={(e) => setInput(e.target.value)}
-                                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                                                placeholder="Ask me anything about your finances..."
-                                                disabled={isTyping}
-                                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-mm-green focus:border-transparent disabled:opacity-50"
-                                            />
-                                        </div>
-
-                                        <VoiceRecorder onTranscript={handleVoiceTranscript} disabled={isTyping} />
-
-                                        <Button
-                                            onClick={() => handleSend()}
-                                            disabled={!input.trim() || isTyping}
-                                            className="mm-btn mm-btn-primary flex-shrink-0"
-                                        >
-                                            <Send className="w-5 h-5" />
-                                        </Button>
-                                    </div>
-                                </div>
-
-                                <p className="text-xs text-center text-gray-500">
-                                    AI responses are powered by Phi-3.5 and may not always be accurate. Always verify important financial decisions.
-                                </p>
                             </div>
-                        </div>
+                        ))}
+
+                        {isTyping && (
+                            <div className="chat-bubble-assistant">
+                                <TypingIndicator />
+                            </div>
+                        )}
+
+                        <div ref={messagesEndRef} />
                     </div>
-                </section>
+
+                    {/* Quick Actions */}
+                    <div className="chat-quick-actions">
+                        {quickActions.map((action) => (
+                            <button
+                                key={action.id}
+                                onClick={() => handleQuickAction(action.id)}
+                                className={`chat-quick-action-btn ${action.emergency ? 'emergency' : ''}`}
+                                disabled={isTyping}
+                            >
+                                <action.icon className="w-4 h-4" />
+                                {action.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Input Area */}
+                    <div className="chat-input-area">
+                        <div className="chat-input-box">
+                            <button className="chat-input-btn voice">
+                                <Camera className="w-5 h-5" />
+                            </button>
+
+                            <input
+                                ref={inputRef}
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                                placeholder="Ask about your finances..."
+                                disabled={isTyping}
+                                className="chat-input-field"
+                            />
+
+                            <VoiceRecorder onTranscript={handleVoiceTranscript} disabled={isTyping} />
+
+                            <button
+                                onClick={() => handleSend()}
+                                disabled={!input.trim() || isTyping}
+                                className="chat-input-btn send"
+                            >
+                                <Send className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <p className="chat-disclaimer">
+                            ⚠️ AI responses are powered by Phi-3.5 and may not always be accurate.
+                        </p>
+                    </div>
+                </div>
+
+                {/* Right Side - Finance Advisor 3D Panel */}
+                <div className="chat-advisor-panel">
+                    {/* Language Toggle */}
+                    <div className="chat-language-toggle">
+                        <button className="language-btn active">EN</button>
+                        <button className="language-btn">हि</button>
+                    </div>
+
+                    {/* 3D Finance Advisor */}
+                    <div className="flex-1 relative">
+                        <FinanceAdvisor3D isThinking={isTyping} isSpeaking={isSpeaking} />
+                    </div>
+
+                    {/* Status Indicator */}
+                    <div className="advisor-status">
+                        <div className={`advisor-status-dot ${isTyping ? 'thinking' : ''} ${isSpeaking ? 'speaking' : ''}`} />
+                        <span className="advisor-status-text">
+                            {isTyping ? 'Thinking...' : isSpeaking ? 'Speaking...' : 'Ready'}
+                        </span>
+                    </div>
+                </div>
             </div>
-        </>
+        </div>
     );
 }
