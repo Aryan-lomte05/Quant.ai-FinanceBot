@@ -144,7 +144,7 @@ export default function DashboardPage() {
           {/* Logo Target - CENTER (like MetaMask Fox) */}
           <div data-logo-target="card" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] pointer-events-none z-20" />
 
-          <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative">
+          <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16 relative">
             {/* Headline with Zoom Animation */}
             <motion.div
               style={{
@@ -282,17 +282,44 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Orange Card: Month Spent (Wide) */}
-              </div>
-
-              {/* Hidden details */}
-              <div className="mm-card-details">
-                <div className="text-white/90 text-sm">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-white/70">Top Category</span>
+                <div className="mm-card-orange-wide mm-card-hover cursor-pointer rounded-3xl p-8" style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8C42 100%)' }}>
+                  <div className="flex items-center justify-between h-full mm-card-main-content">
+                    <div className="flex items-center gap-4">
+                      <div className="text-5xl">💸</div>
+                      <div>
+                        <h3 className="text-xl font-bold text-white mb-1">Month Spent</h3>
+                        <div className="text-3xl font-bold text-white">
+                          <NumericFormat
+                            value={dashboardData.monthSpent}
+                            displayType="text"
+                            thousandSeparator=","
+                            prefix="₹"
+                            renderText={(value) => <span>{value}</span>}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm text-white/80">-8% this month</div>
+                    </div>
                   </div>
-                  <div className="font-bold text-lg">Food & Dining</div>
+
+                  {/* Hidden details */}
+                  <div className="mm-card-details">
+                    <div className="text-white/90 text-sm space-y-2">
+                      <div className="flex justify-between">
+                        <span>Top Category</span>
+                        <span className="font-semibold">Food & Dining</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>vs Last Month</span>
+                        <span className="font-semibold text-emerald-300">-₹2,300</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
         </section>
@@ -321,13 +348,13 @@ export default function DashboardPage() {
           {/* Logo Target - Bottom Right */}
           <div data-logo-target="analytics" className="absolute right-1/3 bottom-1/4 w-48 h-48 pointer-events-none z-10" />
 
-          <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative z-10">
+          <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16 relative z-10">
             {/* Section Title */}
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-center mb-12"
             >
               <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Your Financial Dashboard</h2>
@@ -349,22 +376,22 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               <motion.div
                 style={{ scale: analyticsCardScale }}
-                initial={{ opacity: 0, y: 80 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-                className="card-3d"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+                className="card-3d h-full"
               >
                 <SpendingDonutChart data={dashboardData.category_breakdown} />
               </motion.div>
 
               <motion.div
                 style={{ scale: analyticsCardScale }}
-                initial={{ opacity: 0, y: 80 }}
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-                className="card-3d"
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                className="card-3d h-full"
               >
                 <CashflowLineChart data={spendingTrend} />
               </motion.div>
@@ -435,7 +462,7 @@ export default function DashboardPage() {
             transition={{ duration: 6, repeat: Infinity }}
           />
 
-          <div className="mm-container px-8 w-full max-w-7xl mx-auto relative z-10">
+          <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 relative z-10">
             {/* Section Header */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -506,7 +533,7 @@ export default function DashboardPage() {
           {/* Logo Target - Top Right Corner */}
           <div data-logo-target="features" className="absolute right-1/4 top-1/4 w-56 h-56 pointer-events-none z-10" />
 
-          <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+          <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
             <motion.h2
               style={{
                 scale: featuresTextScale,
@@ -548,7 +575,7 @@ export default function DashboardPage() {
           {/* Logo Target - Center Left */}
           <div data-logo-target="cta" className="absolute left-1/3 top-1/2 -translate-y-1/2 w-32 h-32 pointer-events-none z-10" />
 
-          <div className="mm-container text-center px-4">
+          <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 text-center">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}

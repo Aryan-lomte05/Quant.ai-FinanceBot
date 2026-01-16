@@ -9,40 +9,53 @@
   --mm-purple: #3C154E;
   --mm-black: #24272A;
   --mm-white: #FFFFFF;
-  
+
   /* Accent Colors */
   --mm-orange: #E17726;
   --mm-green: #00E676;
   --mm-blue: #87CEEB;
   --mm-lavender: #B794F6;
-  
+
   /* Gradients */
   --mm-gradient-hero: linear-gradient(135deg, #F2E8DC 0%, #E8D5C4 100%);
   --mm-gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   --mm-gradient-card: linear-gradient(135deg, #FFFFFF 0%, #F9FAFB 100%);
-  
+
   /* Typography */
   --mm-font-display: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
   --mm-font-body: 'Inter', system-ui, -apple-system, sans-serif;
-  
+
   /* Spacing (8px grid) */
   --spacing-xs: 8px;
   --spacing-sm: 16px;
   --spacing-md: 32px;
   --spacing-lg: 64px;
   --spacing-xl: 128px;
-  
+
   /* Border Radius */
   --radius-sm: 16px;
   --radius-md: 24px;
   --radius-lg: 32px;
   --radius-pill: 100px;
-  
+
   /* Shadows */
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.12);
   --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.16);
   --shadow-glow: 0 0 32px rgba(0, 230, 118, 0.3);
+}
+
+/* ===========================================
+   GLOBAL STYLES
+   =========================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ===========================================
@@ -264,6 +277,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -279,6 +293,7 @@
     opacity: 0;
     transform: translateY(50px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -298,9 +313,10 @@
    =========================================== */
 
 .mm-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .mm-section {
@@ -345,12 +361,12 @@
   .mm-heading-mega {
     font-size: 48px;
   }
-  
+
   .mm-grid-3,
   .mm-grid-4 {
     grid-template-columns: 1fr;
   }
-  
+
   .mm-btn {
     width: 100%;
   }

@@ -104,7 +104,7 @@ export default function TaxCalculator() {
     const taxData = calculateTax();
 
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
             <Button onClick={() => router.back()} variant="ghost" className="mb-6">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
@@ -133,8 +133,8 @@ export default function TaxCalculator() {
                                 <button
                                     onClick={() => setRegime('new')}
                                     className={`p-4 rounded-xl border-2 text-left transition-all ${regime === 'new'
-                                            ? 'bg-mint-50 border-mint-500 text-mint-900'
-                                            : 'bg-white border-gray-200 hover:border-mint-500'
+                                        ? 'bg-mint-50 border-mint-500 text-mint-900'
+                                        : 'bg-white border-gray-200 hover:border-mint-500'
                                         }`}
                                 >
                                     <div className="font-semibold mb-1">New Regime</div>
@@ -143,8 +143,8 @@ export default function TaxCalculator() {
                                 <button
                                     onClick={() => setRegime('old')}
                                     className={`p-4 rounded-xl border-2 text-left transition-all ${regime === 'old'
-                                            ? 'bg-skyBlue-50 border-skyBlue-500 text-skyBlue-900'
-                                            : 'bg-white border-gray-200 hover:border-skyBlue-500'
+                                        ? 'bg-skyBlue-50 border-skyBlue-500 text-skyBlue-900'
+                                        : 'bg-white border-gray-200 hover:border-skyBlue-500'
                                         }`}
                                 >
                                     <div className="font-semibold mb-1">Old Regime</div>

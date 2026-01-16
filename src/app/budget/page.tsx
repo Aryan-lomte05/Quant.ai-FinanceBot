@@ -82,7 +82,7 @@ export default function BudgetPage() {
                     {/* Logo Target */}
                     <div data-logo-target="hero" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                    <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                         {/* Massive Headline */}
                         <motion.div
                             style={{
@@ -107,7 +107,7 @@ export default function BudgetPage() {
                                 initial={{ opacity: 0, y: 60 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="mm-card mm-card-medium card-3d"
                             >
                                 <div className="w-16 h-16 bg-mm-purple/10 rounded-2xl flex items-center justify-center mb-6">
@@ -124,7 +124,7 @@ export default function BudgetPage() {
                                 initial={{ opacity: 0, y: 60 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="mm-card-colored mm-card-green mm-card-medium card-3d"
                             >
                                 <div className="text-6xl mb-4">💰</div>
@@ -142,7 +142,7 @@ export default function BudgetPage() {
                                 initial={{ opacity: 0, y: 60 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ duration: 0.6, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="mm-card mm-card-medium card-3d bg-gradient-to-br from-mm-purple to-mm-lavender text-white"
                             >
                                 <Sparkles className="w-12 h-12 mb-6" />
@@ -159,7 +159,7 @@ export default function BudgetPage() {
                     {/* Logo Target */}
                     <div data-logo-target="card" className="absolute left-1/4 top-1/3 -translate-x-1/2 w-64 h-64 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                    <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             {/* Budget vs Actual Chart */}
                             <motion.div
@@ -167,7 +167,7 @@ export default function BudgetPage() {
                                 initial={{ opacity: 0, x: -60 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="mm-card card-3d"
                             >
                                 <div className="flex items-center gap-3 mb-6">
@@ -185,7 +185,7 @@ export default function BudgetPage() {
                                 initial={{ opacity: 0, x: 60 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                                 className="mm-card card-3d"
                             >
                                 <div className="flex items-center justify-between mb-6">
@@ -208,12 +208,12 @@ export default function BudgetPage() {
                     {/* Logo Target */}
                     <div data-logo-target="cta" className="absolute right-1/4 top-1/2 -translate-y-1/2 w-48 h-48 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto">
+                    <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                             className="text-center mb-8"
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm font-bold text-mm-purple shadow-lg mb-6">
