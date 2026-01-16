@@ -42,7 +42,7 @@ export default function InsightsPage() {
                     {/* Logo Target - Top Center */}
                     <div data-logo-target="insights-hero" className="absolute left-1/2 top-1/3 -translate-x-1/2 w-64 h-64 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                    <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                         <motion.div
                             style={{
                                 scale: textScale,
@@ -77,7 +77,7 @@ export default function InsightsPage() {
                                                 initial={{ opacity: 0, y: 60 }}
                                                 whileInView={{ opacity: 1, y: 0 }}
                                                 viewport={{ once: true }}
-                                                transition={{ delay: index * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                                transition={{ delay: index * 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                                             >
                                                 <div className="mm-card card-3d h-full">
                                                     <div className={`w-16 h-16 bg-${item.color}/10 rounded-2xl flex items-center justify-center mb-6`}>
@@ -118,12 +118,12 @@ export default function InsightsPage() {
                     {/* Logo Target - Center */}
                     <div data-logo-target="insights-cta" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto text-center">
+                    <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16 text-center">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                         >
                             <h2 className="text-5xl md:text-6xl font-black text-mm-black mb-6 leading-tight">
                                 Get Full
