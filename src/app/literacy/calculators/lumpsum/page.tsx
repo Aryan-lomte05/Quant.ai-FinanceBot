@@ -36,7 +36,7 @@ export default function LumpsumCalculator() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[1920px] mx-auto">
             <Button onClick={() => router.back()} variant="ghost" className="mb-6">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
