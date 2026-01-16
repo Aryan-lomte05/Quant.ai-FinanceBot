@@ -30,6 +30,24 @@ export const mockData = {
             spending: '-8%',
             savings: '+15%',
         },
+        category_breakdown: {
+            'Food & Dining': { total: 7640, count: 45 },
+            'Transport': { total: 2880, count: 23 },
+            'Shopping': { total: 5420, count: 12 },
+            'Bills & Utilities': { total: 5900, count: 8 },
+            'Entertainment': { total: 1650, count: 15 },
+            'Groceries': { total: 3780, count: 20 },
+        },
+        insights: [
+            'You spent 15% more on dining out this month',
+            'Transport costs are 20% below average - great job!',
+            'Consider setting aside ₹2,000 more for savings'
+        ],
+        forecast: {
+            nextMonth: 27500,
+            confidence: 0.85,
+            trend: 'stable'
+        }
     },
 
     // Spending Trend (Last 30 days)
