@@ -14,7 +14,11 @@ interface BudgetCategory {
     gradient: string;
 }
 
-export function BudgetProgressBars() {
+interface BudgetProgressBarsProps {
+    allocations?: Array<{ category: string; spent: number; allocated: number }>;
+}
+
+export function BudgetProgressBars({ allocations = [] }: BudgetProgressBarsProps) {
     const getCategoryStyles = (category: string) => {
         switch (category) {
             case 'Shopping': return { icon: ShoppingBag, color: '#EC4899', gradient: 'from-pink-500 to-rose-600' };
@@ -27,18 +31,20 @@ export function BudgetProgressBars() {
         }
     };
 
-    const budgets: BudgetCategory[] = mockData.budget.allocations.slice(0, 6).map((allocation, index) => {
-        const styles = getCategoryStyles(allocation.category);
-        return {
-            id: String(index + 1),
-            name: allocation.category,
-            spent: allocation.spent,
-            budget: allocation.allocated,
-            icon: styles.icon,
-            color: styles.color,
-            gradient: styles.gradient
-        };
-    });
+    const budgets: BudgetCategory[] = (allocations.length > 0 ? allocations : mockData.budget.allocations)
+        .slice(0, 6)
+        .map((allocation, index) => {
+            const styles = getCategoryStyles(allocation.category);
+            return {
+                id: String(index + 1),
+                name: allocation.category,
+                spent: allocation.spent || 0,
+                budget: allocation.allocated || 1,
+                icon: styles.icon,
+                color: styles.color,
+                gradient: styles.gradient
+            };
+        });
 
     const getStatusColor = (percentage: number) => {
         if (percentage < 70) return 'text-emerald-600';

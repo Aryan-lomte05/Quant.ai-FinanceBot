@@ -13,7 +13,11 @@ interface Insight {
     iconBg: string;
 }
 
-export function SpendingInsights() {
+interface SpendingInsightsProps {
+    insights?: any[];
+}
+
+export function SpendingInsights(props: SpendingInsightsProps) {
     const getInsightStyles = (type: string) => {
         switch (type) {
             case 'spending_spike':
@@ -29,7 +33,37 @@ export function SpendingInsights() {
         }
     };
 
-    const insights: Insight[] = mockData.insights.map(i => {
+    const { insights: apiInsights } = props;
+
+    // Map API insights to UI format or use mock if empty
+    const displayInsights: Insight[] = (apiInsights && apiInsights.length > 0) ? apiInsights.map((i: any, index: number) => {
+        let type = 'tip';
+        let icon = Lightbulb;
+        let iconBg = 'bg-violet-500';
+
+        if (i.type === 'warning' || i.type === 'budget_alert' || i.type === 'anomaly') {
+            type = 'warning';
+            icon = AlertCircle;
+            iconBg = 'bg-orange-500';
+        } else if (i.type === 'achievement') {
+            type = 'achievement';
+            icon = Star;
+            iconBg = 'bg-amber-500';
+        } else if (i.type === 'top_spending') {
+            type = 'trend';
+            icon = TrendingUp;
+            iconBg = 'bg-cyan-500';
+        }
+
+        return {
+            id: `insight-${index}`,
+            type: type as any,
+            title: i.title,
+            message: i.description,
+            icon: icon,
+            iconBg: iconBg
+        };
+    }) : mockData.insights.map(i => {
         const styles = getInsightStyles(i.type);
         return {
             id: i.id,
@@ -40,6 +74,8 @@ export function SpendingInsights() {
             iconBg: styles.iconBg,
         };
     });
+
+    const insights = displayInsights;
 
     return (
         <motion.div

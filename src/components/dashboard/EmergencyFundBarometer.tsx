@@ -4,11 +4,15 @@ import { motion } from 'framer-motion';
 import { Shield, TrendingUp, AlertTriangle, CheckCircle, DollarSign, Calendar } from 'lucide-react';
 import { mockData } from '@/lib/api/mock-data';
 
-export function EmergencyFundBarometer() {
-    const emergencyGoal = mockData.goals.find(g => g.name === 'Emergency Fund') || mockData.goals[0];
+interface EmergencyFundBarometerProps {
+    goal?: any;
+}
+
+export function EmergencyFundBarometer({ goal }: EmergencyFundBarometerProps) {
+    const emergencyGoal = goal || mockData.goals.find(g => g.name === 'Emergency Fund') || mockData.goals[0];
     const currentAmount = emergencyGoal.current;
     const targetAmount = emergencyGoal.target;
-    const monthlyExpenses = mockData.dashboardSummary.monthSpent;
+    const monthlyExpenses = mockData.dashboardSummary.monthSpent; // Ideally pass this too, but mock is fine for now
     const monthsCovered = currentAmount / monthlyExpenses;
     const percentage = (currentAmount / targetAmount) * 100;
     const recommendedMonths = 6;

@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { GoalCard } from "@/components/goals/GoalCard";
 import { AddGoalModal } from "@/components/goals/AddGoalModal";
 import { mockData } from "@/lib/api/mock-data";
-import { Target, Trophy, TrendingUp, Plus, Sparkles, Wallet, Lightbulb, AlertTriangle, CheckCircle, ArrowRight } from "lucide-react";
+import { useGoals } from "@/lib/hooks/useMLApi";
+import { useUserStore } from "@/lib/store/useUserStore";
+import { Target, Trophy, TrendingUp, Plus, Sparkles, Wallet, Lightbulb, AlertTriangle, CheckCircle, ArrowRight, Loader2 } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 import { useConfetti } from "@/lib/hooks/useConfetti";
@@ -13,6 +15,9 @@ import { useBalloons } from "@/lib/hooks/useBalloons";
 import { FireworksEffect } from "@/components/animations/FireworksEffect";
 import { useXPTriggers } from "@/lib/hooks/useXPTriggers";
 import { Balloons } from "@/components/animations/Balloons";
+
+// Demo user ID
+const DEMO_USER_ID = "696a022c3c758e29b2ca8d50";
 
 export interface Goal {
     id: string;
@@ -28,10 +33,46 @@ export interface Goal {
         reached: boolean;
         date: string | null;
     }>;
+    // ML Forecast Data
+    eta_days?: number | null;
+    on_track?: boolean;
 }
 
 export default function GoalsPage() {
+    // Get user from store or use demo
+    const { userId } = useUserStore();
+    const activeUserId = userId || DEMO_USER_ID;
+
+    // Fetch real goals from API
+    const {
+        goals: apiGoals,
+        loading,
+        refetch,
+        createGoal: createGoalApi,
+        contributeToGoal
+    } = useGoals(activeUserId);
+
+    // Use API data if available, fallback to mock for UI
     const [goals, setGoals] = useState<Goal[]>(mockData.goals as unknown as Goal[]);
+
+    // Sync API goals to local state when available
+    useEffect(() => {
+        if (apiGoals.length > 0) {
+            setGoals(apiGoals.map(g => ({
+                id: g.id,
+                name: g.name,
+                icon: g.icon,
+                target: g.target,
+                current: g.current,
+                deadline: g.deadline,
+                priority: g.priority,
+                color: g.color,
+                milestones: g.milestones || [],
+                eta_days: g.eta_days,
+                on_track: g.on_track
+            })));
+        }
+    }, [apiGoals]);
     const { fireCelebration, fireConfetti } = useConfetti();
     const { isActive: fireworksActive, launch: launchFireworks } = useFireworks();
     const { isActive: balloonsActive, launch: launchBalloons } = useBalloons();
@@ -134,6 +175,7 @@ export default function GoalsPage() {
         const percentage = (goal.current / goal.target) * 100;
         const remaining = goal.target - goal.current;
 
+        // 1. Goal Achieved
         if (percentage >= 100) return {
             title: "Goal Achieved!",
             message: "Great job! Consider moving these funds to a high-yield instrument.",
@@ -143,6 +185,32 @@ export default function GoalsPage() {
             bg: "bg-emerald-100"
         };
 
+        // 2. ML Forecast: Not on Track
+        if (goal.on_track === false && goal.eta_days) {
+            const delayDays = goal.eta_days - 30; // Rough estimate of delay
+            return {
+                title: "Risk of Delay",
+                message: `Forecast suggests you might miss the deadline by ~${Math.max(5, Math.round(delayDays))} days. Increase contribution!`,
+                type: "warning",
+                icon: AlertTriangle,
+                color: "text-amber-600",
+                bg: "bg-amber-100"
+            };
+        }
+
+        // 3. ML Forecast: On Track
+        if (goal.on_track === true) {
+            return {
+                title: "On Track (AI Verified)",
+                message: `You are projected to hit this goal in ${goal.eta_days} days. Keep it up!`,
+                type: "success",
+                icon: Sparkles,
+                color: "text-indigo-600",
+                bg: "bg-indigo-100"
+            };
+        }
+
+        // 4. Fallback Rules
         if (goal.priority === "High" && percentage < 40) return {
             title: "Boost Required",
             message: `Increase monthly savings by ₹${Math.round(remaining / 12)} to hit target on time.`,

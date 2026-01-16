@@ -15,11 +15,13 @@ interface SpendingCategory {
     [key: string]: any;
 }
 
-export function SpendingDonutChart() {
+interface SpendingDonutChartProps {
+    data?: Record<string, { total: number; count: number }>;
+}
+
+export function SpendingDonutChart({ data: categoryBreakdown }: SpendingDonutChartProps) {
     const PieComponent = Pie as any;
     const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-
-    const totalSpending = mockData.dashboardSummary.monthSpent;
 
     const getCategoryDetails = (category: string) => {
         switch (category) {
@@ -33,19 +35,29 @@ export function SpendingDonutChart() {
         }
     };
 
-    const data: SpendingCategory[] = mockData.budget.allocations
-        .filter(a => a.spent > 0)
-        .slice(0, 6)
-        .map(allocation => {
-            const details = getCategoryDetails(allocation.category);
-            return {
-                name: allocation.category,
-                value: allocation.spent,
-                color: details.color,
-                icon: details.icon,
-                percentage: (allocation.spent / totalSpending) * 100
-            };
-        });
+    // Transform API data or use fallback
+    const chartData: SpendingCategory[] = categoryBreakdown
+        ? Object.entries(categoryBreakdown)
+            .map(([name, stats]) => {
+                const details = getCategoryDetails(name);
+                return {
+                    name,
+                    value: stats.total,
+                    color: details.color,
+                    icon: details.icon,
+                    percentage: 0 // Calculated below
+                };
+            })
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 6)
+        : [];
+
+    const totalSpending = chartData.reduce((sum, item) => sum + item.value, 0) || 1;
+    chartData.forEach(item => item.percentage = (item.value / totalSpending) * 100);
+
+    const data = chartData.length > 0 ? chartData : [
+        { name: 'No Data', value: 1, color: '#E5E7EB', icon: TrendingUp, percentage: 100 }
+    ];
 
     const renderActiveShape = (props: any) => {
         const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;

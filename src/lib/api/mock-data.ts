@@ -32,6 +32,16 @@ export const mockData = {
         },
     },
 
+    // Spending Trend (Last 30 days)
+    spendingTrend: Array.from({ length: 30 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (29 - i));
+        return {
+            date: format(date, 'dd MMM'),
+            amount: 2000 + Math.floor(Math.abs(Math.sin(i * 0.5)) * 5000) + (i % 7 === 0 ? 5000 : 0) // Deterministic pattern
+        };
+    }),
+
     // Transactions (100+ samples)
     transactions: [
         {

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Clock, TrendingUp, TrendingDown, ArrowRight, Zap, PiggyBank, Wallet, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, TrendingUp, TrendingDown, ArrowRight, Zap, PiggyBank, Wallet, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import { mockData } from '@/lib/api/mock-data';
 
 interface TimeComparison {
@@ -12,11 +12,40 @@ interface TimeComparison {
     past: { income: number; expenses: number; savings: number; balance: number; };
 }
 
-export function FinancialTimeMachine() {
-    const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'quarter' | 'year'>('month');
+interface FinancialTimeMachineProps {
+    forecast?: {
+        horizon: string;
+        predicted_savings: number;
+        confidence: number;
+    };
+}
+
+export function FinancialTimeMachine({ forecast }: FinancialTimeMachineProps) {
+    const [selectedPeriod, setSelectedPeriod] = useState<'month' | 'quarter' | 'year' | 'future'>('month');
     const [currentPage, setCurrentPage] = useState(0);
-    const comparisons: Record<string, TimeComparison> = mockData.financialHistory as any;
-    const data = comparisons[selectedPeriod];
+
+    // Construct data including Future Forecast if available
+    const comparisons: Record<string, TimeComparison> = {
+        ...mockData.financialHistory as any,
+        future: forecast ? {
+            period: 'Next 30 Days',
+            label: 'AI Forecast',
+            current: {
+                income: 0, // Placeholder
+                expenses: 0, // Placeholder
+                savings: 0,
+                balance: 0
+            },
+            past: {
+                income: 0,
+                expenses: 0,
+                savings: forecast.predicted_savings,
+                balance: 0
+            }
+        } : null
+    };
+
+    const data = comparisons[selectedPeriod] || comparisons['month'];
 
     const calculateChange = (current: number, past: number) => {
         const change = current - past;
@@ -72,20 +101,23 @@ export function FinancialTimeMachine() {
                 </div>
 
                 <div className="flex items-center gap-1 p-1 bg-white/20 rounded-xl">
-                    {(['month', 'quarter', 'year'] as const).map((period) => (
-                        <motion.button
-                            key={period}
-                            onClick={() => setSelectedPeriod(period)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${selectedPeriod === period
-                                ? 'bg-white text-teal-700'
-                                : 'text-white/80 hover:text-white'
-                                }`}
-                        >
-                            {period === 'month' ? '1M' : period === 'quarter' ? '3M' : '1Y'}
-                        </motion.button>
-                    ))}
+                    {(['month', 'quarter', 'year', 'future'] as const).map((period) => {
+                        if (period === 'future' && !forecast) return null;
+                        return (
+                            <motion.button
+                                key={period}
+                                onClick={() => setSelectedPeriod(period)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${selectedPeriod === period
+                                    ? 'bg-white text-teal-700'
+                                    : 'text-white/80 hover:text-white'
+                                    }`}
+                            >
+                                {period === 'month' ? '1M' : period === 'quarter' ? '3M' : period === 'year' ? '1Y' : '🔮 Future'}
+                            </motion.button>
+                        );
+                    })}
                 </div>
             </div>
 
@@ -118,6 +150,35 @@ export function FinancialTimeMachine() {
                 >
                     {metrics.map((metric, index) => {
                         const Icon = metric.icon;
+
+                        // Special handling for Future Forecast
+                        if (selectedPeriod === 'future') {
+                            if (metric.name === 'Savings') {
+                                return (
+                                    <motion.div
+                                        key={metric.name}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="col-span-2 p-4 bg-white rounded-2xl border-2 border-teal-400 shadow-lg"
+                                    >
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-10 h-10 rounded-xl bg-teal-500 flex items-center justify-center">
+                                                <Sparkles className="w-5 h-5 text-white" />
+                                            </div>
+                                            <div>
+                                                <p className="text-sm text-gray-500">AI Predicted Savings</p>
+                                                <p className="text-2xl font-black text-gray-900">₹{metric.past.toLocaleString('en-IN')}</p>
+                                            </div>
+                                        </div>
+                                        <div className="mt-2 text-xs text-teal-600 font-medium bg-teal-50 p-2 rounded-lg">
+                                            Based on your recent spending habits (LSTM Model)
+                                        </div>
+                                    </motion.div>
+                                );
+                            }
+                            return null; // Hide other metrics for now
+                        }
+
                         const change = calculateChange(metric.current, metric.past);
                         const isGood = metric.goodDirection === 'up' ? change.isPositive : !change.isPositive;
 

@@ -17,13 +17,58 @@ import { SpendingInsights } from "@/components/dashboard/SpendingInsights";
 import { FinancialTimeMachine } from "@/components/dashboard/FinancialTimeMachine";
 import { TaxOptimizerDashboard } from "@/components/dashboard/TaxOptimizerDashboard";
 import { mockData } from "@/lib/api/mock-data";
+import { useDashboard } from "@/lib/hooks/useMLApi";
+import { useUserStore } from "@/lib/store/useUserStore";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { TrendingUp, Wallet, Target, Sparkles, PiggyBank, Shield } from "lucide-react";
+import { TrendingUp, Wallet, Target, Sparkles, PiggyBank, Shield, Loader2 } from "lucide-react";
 import { NumericFormat } from "react-number-format";
 
+// Demo user ID - replace with actual user from auth
+const DEMO_USER_ID = "696a022c3c758e29b2ca8d50";
+
 export default function DashboardPage() {
-  const [dashboardData, setDashboardData] = useState(mockData.dashboardSummary);
-  const [spendingData, setSpendingData] = useState<Array<{ date: string; amount: number }>>([]);
+  // Get user from store or use demo
+  const { userId } = useUserStore();
+  const activeUserId = userId || DEMO_USER_ID;
+
+  // Fetch real dashboard data from API
+  const { data: apiData, loading, error, refetch } = useDashboard(activeUserId);
+
+  // Use API data if available, fallback to mock
+  const dashboardData = apiData ? {
+    currentBalance: apiData.stats.current_balance,
+    monthSpent: apiData.stats.month_spent,
+    monthSaved: apiData.stats.month_saved,
+    savingsRate: apiData.stats.savings_rate,
+    budgetAdherence: 0.89, // Calculate from budget_summary
+    financialScore: apiData.stats.financial_score,
+    trend: {
+      balance: '+12%',
+      spending: '-8%',
+      savings: '+15%',
+    },
+    category_breakdown: apiData.category_breakdown,
+    insights: apiData.insights,
+    forecast: apiData.forecast,
+  } : mockData.dashboardSummary;
+
+  const [spendingTrend, setSpendingTrend] = useState<Array<{ date: string; amount: number }>>([]);
+  const [budget, setBudget] = useState<any>(null);
+  const [goals, setGoals] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Mock trend data for now if not available
+    if (!spendingTrend.length) {
+      setSpendingTrend(mockData.spendingTrend);
+    }
+  }, []);
+
+  // Find Emergency Fund goal
+  const emergencyFundGoal = goals.find(g => g.name.toLowerCase().includes('emergency') || g.priority === 'high');
+
+  // Calculate budget progress
+  const budgetAllocations = budget?.allocations || [];
+  const totalBudget = budget?.total_income || 50000; // Fallback or use income
 
   // Refs for each section's scroll-zoom
   const financesSectionRef = useRef<HTMLDivElement>(null);
@@ -77,23 +122,6 @@ export default function DashboardPage() {
     { stiffness: 100, damping: 30 }
   );
 
-  useEffect(() => {
-    const generateSpendingTrend = () => {
-      const data = [];
-      for (let i = 29; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        data.push({
-          date: date.toLocaleDateString("en-IN", { day: "2-digit", month: "short" }),
-          amount: Math.floor(Math.random() * 2000) + 500,
-        });
-      }
-      return data;
-    };
-
-    setSpendingData(generateSpendingTrend());
-  }, []);
-
   return (
     <>
       {/* Opening Purple Animation - Shows once per session */}
@@ -125,11 +153,25 @@ export default function DashboardPage() {
               }}
               className="mb-16 relative z-10"
             >
-              <h2 className="mm-section-heading text-center lg:text-left max-w-2xl">
-                YOUR FINANCES
-                <br />
-                UNDER CONTROL
-              </h2>
+              <div className="flex items-center gap-4 mb-4">
+                <h2 className="mm-section-heading text-center lg:text-left max-w-2xl">
+                  YOUR FINANCES
+                  <br />
+                  UNDER CONTROL
+                </h2>
+                {/* Live Data Indicator */}
+                {loading ? (
+                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    LOADING...
+                  </span>
+                ) : apiData ? (
+                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full animate-pulse">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    LIVE DATA
+                  </span>
+                ) : null}
+              </div>
             </motion.div>
 
             {/* EXACT MetaMask 2-Column Grid */}
@@ -240,38 +282,17 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Orange Card: Month Spent (Wide) */}
-                <div className="mm-card-orange-wide mm-card-hover cursor-pointer rounded-3xl p-6" style={{ background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)' }}>
-                  <div className="flex items-center justify-between h-full mm-card-main-content">
-                    <div>
-                      <div className="text-5xl mb-2">💸</div>
-                      <h3 className="text-2xl font-bold text-white">Month Spent</h3>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-5xl font-bold text-white">
-                        <NumericFormat
-                          value={dashboardData.monthSpent}
-                          displayType="text"
-                          thousandSeparator=","
-                          prefix="₹"
-                          renderText={(value) => <span>{value}</span>}
-                        />
-                      </div>
-                      <div className="text-sm text-white/80 mt-1">-8% from last month</div>
-                    </div>
-                  </div>
-
-                  {/* Hidden details */}
-                  <div className="mm-card-details">
-                    <div className="text-white/90 text-sm">
-                      <div className="flex justify-between mb-1">
-                        <span className="text-white/70">Top Category</span>
-                      </div>
-                      <div className="font-bold text-lg">Food & Dining</div>
-                    </div>
-                  </div>
-                </div>
               </div>
 
+              {/* Hidden details */}
+              <div className="mm-card-details">
+                <div className="text-white/90 text-sm">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-white/70">Top Category</span>
+                  </div>
+                  <div className="font-bold text-lg">Food & Dining</div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -320,8 +341,8 @@ export default function DashboardPage() {
               initialTranslateX={[-20, 0, 20]}
               pushDistance={60}
             >
-              <SpendingSparkline data={spendingData} />
-              <BudgetHealthGauge spent={dashboardData.monthSpent} budget={50000} />
+              <SpendingSparkline data={spendingTrend} />
+              <BudgetHealthGauge spent={dashboardData.monthSpent} budget={totalBudget} />
               <UpcomingBillsCarousel />
             </BounceDashboardCards>
 
@@ -334,7 +355,7 @@ export default function DashboardPage() {
                 transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
                 className="card-3d"
               >
-                <SpendingDonutChart />
+                <SpendingDonutChart data={dashboardData.category_breakdown} />
               </motion.div>
 
               <motion.div
@@ -345,7 +366,7 @@ export default function DashboardPage() {
                 transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 className="card-3d"
               >
-                <CashflowLineChart data={spendingData} />
+                <CashflowLineChart data={spendingTrend} />
               </motion.div>
             </div>
 
@@ -357,7 +378,7 @@ export default function DashboardPage() {
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               className="mb-12"
             >
-              <BudgetProgressBars />
+              <BudgetProgressBars allocations={budgetAllocations} />
             </motion.div>
 
             {/* Emergency Fund only */}
@@ -369,7 +390,7 @@ export default function DashboardPage() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="mb-12"
             >
-              <EmergencyFundBarometer />
+              <EmergencyFundBarometer goal={emergencyFundGoal} />
             </motion.div>
           </div>
         </motion.section>
@@ -452,7 +473,7 @@ export default function DashboardPage() {
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 style={{ transformOrigin: 'center top' }}
               >
-                <SpendingInsights />
+                <SpendingInsights insights={dashboardData?.insights} />
               </motion.div>
 
               <motion.div
@@ -462,7 +483,7 @@ export default function DashboardPage() {
                 transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
                 style={{ transformOrigin: 'center top' }}
               >
-                <FinancialTimeMachine />
+                <FinancialTimeMachine forecast={dashboardData?.forecast} />
               </motion.div>
             </div>
 

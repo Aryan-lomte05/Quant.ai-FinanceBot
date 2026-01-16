@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Brush } from 'recharts';
 import { TrendingUp, TrendingDown, DollarSign, Calendar, Waves } from 'lucide-react';
@@ -12,12 +12,33 @@ interface CashflowData {
     netFlow: number;
 }
 
-export function CashflowLineChart() {
-    const [selectedRange, setSelectedRange] = useState<[number, number]>([0, 29]);
+interface CashflowLineChartProps {
+    data?: Array<{ date: string; amount: number }>;
+}
 
-    const generateCashflowData = (): CashflowData[] => {
+export function CashflowLineChart({ data: spendingData }: CashflowLineChartProps) {
+    const [selectedRange, setSelectedRange] = useState<[number, number]>([0, 29]);
+    const [demoData, setDemoData] = useState<CashflowData[]>([]);
+
+    useEffect(() => {
+        if (!spendingData || spendingData.length === 0) {
+            setDemoData(generateCashflowData());
+        }
+    }, [spendingData]);
+
+    // Transform spending data or use fallback
+    const allData: CashflowData[] = spendingData && spendingData.length > 0
+        ? spendingData.map(d => ({
+            date: d.date,
+            income: Math.round(d.amount * 1.2), // Simulated income for now (until API update)
+            expenses: d.amount,
+            netFlow: Math.round(d.amount * 0.2)
+        }))
+        : demoData;
+
+    function generateCashflowData(): CashflowData[] {
         const data: CashflowData[] = [];
-        for (let i = 89; i >= 0; i--) {
+        for (let i = 29; i >= 0; i--) {
             const date = new Date();
             date.setDate(date.getDate() - i);
             const income = Math.floor(Math.random() * 15000) + 5000;
@@ -30,9 +51,7 @@ export function CashflowLineChart() {
             });
         }
         return data;
-    };
-
-    const [allData] = useState(generateCashflowData());
+    }
     const displayData = allData.slice(selectedRange[0], selectedRange[1] + 1);
 
     const totalIncome = displayData.reduce((sum, d) => sum + d.income, 0);

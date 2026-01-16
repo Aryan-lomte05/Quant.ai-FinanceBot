@@ -1,22 +1,38 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGamificationStore } from '@/lib/store/useGamificationStore';
+import { useGamification } from '@/lib/hooks/useMLApi';
+import { useUserStore } from '@/lib/store/useUserStore';
 import { LevelProgressBar } from '@/components/gamification/LevelProgressBar';
 import { BadgeGrid } from '@/components/gamification/BadgeGrid';
 import { ChallengeCard } from '@/components/gamification/ChallengeCard';
 import { Leaderboard } from '@/components/gamification/Leaderboard';
 import { BadgeUnlockModal } from '@/components/gamification/BadgeUnlockModal';
 import { AchievementUnlockModal } from '@/components/gamification/AchievementUnlockModal';
-import { LevelUpModal } from '@/components/gamification/LevelUpModal'; // NEW
+import { LevelUpModal } from '@/components/gamification/LevelUpModal';
 import { Badge } from '@/lib/constants/achievements';
 import { FireworksEffect } from '@/components/animations/FireworksEffect';
 import { useFireworks } from '@/lib/hooks/useFireworks';
-import { useLevelUp } from '@/lib/hooks/useLevelUp'; // NEW
-import { Trophy, Target, Award, Users } from 'lucide-react';
+import { useLevelUp } from '@/lib/hooks/useLevelUp';
+import { Trophy, Target, Award, Users, Loader2 } from 'lucide-react';
+
+// Demo user ID
+const DEMO_USER_ID = "696a022c3c758e29b2ca8d50";
 
 export default function GamificationPage() {
+    // Get user from store or use demo
+    const { userId } = useUserStore();
+    const activeUserId = userId || DEMO_USER_ID;
+
+    // Fetch real gamification data from API
+    const { gamification: apiGamification, loading, refetch, checkBadges } = useGamification(activeUserId);
+
+    // Sync API data with local store
     const { level, badges, challenges, recentUnlocks, addXP, updateChallengeProgress, clearRecentUnlocks } = useGamificationStore();
+
+    // Use API data for level info if available
+    const displayLevel = apiGamification?.level_info || level;
     const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
     const [activeTab, setActiveTab] = useState<'challenges' | 'badges' | 'leaderboard'>('challenges');
     const { isActive: fireworksActive, launch: launchFireworks } = useFireworks();
@@ -69,8 +85,8 @@ export default function GamificationPage() {
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id as any)}
                             className={`px-6 py-3 rounded-lg font-medium text-sm transition-all flex items-center gap-2 ${activeTab === tab.id
-                                    ? 'bg-gradient-to-r from-mint-500 to-skyBlue-500 text-white shadow-lg'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                ? 'bg-gradient-to-r from-mint-500 to-skyBlue-500 text-white shadow-lg'
+                                : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
                             <tab.icon className="w-4 h-4" />

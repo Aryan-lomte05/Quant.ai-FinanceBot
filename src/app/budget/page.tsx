@@ -4,14 +4,43 @@ import { useState, useRef } from "react";
 import { CategoryAllocation } from "@/components/budget/CategoryAllocation";
 import { ComparisonChart } from "@/components/budget/ComparisonChart";
 import { BudgetSlider } from "@/components/budget/BudgetSlider";
+import { BudgetRecommendations } from "@/components/budget/BudgetRecommendations";
 import { Logo3D } from "@/components/shared/Logo3D";
 import { mockData } from "@/lib/api/mock-data";
-import { Target, TrendingDown, IndianRupee, PieChart, Sparkles, TrendingUp } from "lucide-react";
+import { useBudget } from "@/lib/hooks/useMLApi";
+import { useUserStore } from "@/lib/store/useUserStore";
+import { Target, TrendingDown, IndianRupee, PieChart, Sparkles, TrendingUp, Loader2 } from "lucide-react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { formatCurrency } from "@/lib/utils";
 
+// Demo user ID
+const DEMO_USER_ID = "696a022c3c758e29b2ca8d50";
+
 export default function BudgetPage() {
-    const budgetData = mockData.budget;
+    // Get user from store or use demo
+    const { userId } = useUserStore();
+    const activeUserId = userId || DEMO_USER_ID;
+
+    // Fetch real budget data and recommendations from API
+    const {
+        budget: apiBudget,
+        recommendations,
+        savingsPotential,
+        loading,
+        refetch,
+        submitFeedback
+    } = useBudget(activeUserId);
+
+    // Use API data if available, fallback to mock
+    const budgetData = apiBudget ? {
+        totalIncome: apiBudget.total_income,
+        allocations: apiBudget.allocations.map(a => ({
+            category: a.category,
+            allocated: a.allocated,
+            spent: a.spent,
+            color: '#6366f1' // Default color
+        }))
+    } : mockData.budget;
     const totalSpent = budgetData.allocations.reduce((acc, curr) => acc + curr.spent, 0);
     const totalAllocated = budgetData.allocations.reduce((acc, curr) => acc + curr.allocated, 0);
     const savingsRate = ((budgetData.totalIncome - totalSpent) / budgetData.totalIncome) * 100;
@@ -179,16 +208,17 @@ export default function BudgetPage() {
                     {/* Logo Target */}
                     <div data-logo-target="cta" className="absolute right-1/4 top-1/2 -translate-y-1/2 w-48 h-48 pointer-events-none z-10" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto text-center">
+                    <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            className="text-center mb-8"
                         >
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full text-sm font-bold text-mm-purple shadow-lg mb-6">
                                 <Sparkles className="w-4 h-4" />
-                                AI RECOMMENDED ADJUSTMENT
+                                {loading ? 'LOADING AI...' : 'POLICYLEARNER AI'}
                             </div>
 
                             <h2 className="text-5xl md:text-6xl font-black text-mm-black mb-6 leading-tight">
@@ -198,20 +228,31 @@ export default function BudgetPage() {
                             </h2>
 
                             <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto">
-                                Based on your spending patterns, we suggest reducing "Food & Dining" by 10% and allocating it to your "Emergency Fund".
+                                AI-powered recommendations based on your spending patterns
                             </p>
-
-                            <div className="bg-white p-8 rounded-3xl shadow-xl max-w-xl mx-auto">
-                                <BudgetSlider
-                                    label="Emergency Fund Adjustment"
-                                    value={adjustmentValue}
-                                    onChange={setAdjustmentValue}
-                                />
-                                <button className="mm-btn mm-btn-primary w-full mt-6 text-lg">
-                                    Apply Changes
-                                </button>
-                            </div>
                         </motion.div>
+
+                        {/* PolicyLearner Recommendations */}
+                        <BudgetRecommendations
+                            recommendations={recommendations}
+                            savingsPotential={savingsPotential}
+                            onAccept={async (category) => await submitFeedback(category, 'accepted')}
+                            onReject={async (category) => await submitFeedback(category, 'rejected')}
+                            onRefresh={refetch}
+                            loading={loading}
+                        />
+
+                        {/* Manual Adjustment Fallback */}
+                        <div className="bg-white p-8 rounded-3xl shadow-xl max-w-xl mx-auto mt-8">
+                            <BudgetSlider
+                                label="Emergency Fund Adjustment"
+                                value={adjustmentValue}
+                                onChange={setAdjustmentValue}
+                            />
+                            <button className="mm-btn mm-btn-primary w-full mt-6 text-lg">
+                                Apply Changes
+                            </button>
+                        </div>
                     </div>
                 </section>
             </div>
