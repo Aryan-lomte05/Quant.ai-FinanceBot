@@ -1,9 +1,9 @@
 /* MetaMask Grid Layout - CLEAN VERSION */
 .metamask-exact-grid {
     display: grid;
-    grid-template-columns: 380px 380px;
-    gap: 24px;
-    max-width: 800px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    max-width: 900px;
     margin: 0 auto;
     position: relative;
 }
@@ -12,30 +12,40 @@
 .mm-right-column {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 32px;
 }
 
-/* Card Heights */
+/* Card Heights - More Consistent */
 .mm-card-purple-top {
-    height: 220px;
+    min-height: 220px;
+    height: auto;
 }
 
 .mm-card-purple-bottom {
-    height: 180px;
+    min-height: 160px;
+    height: auto;
 }
 
 .mm-card-teal-tall {
-    height: 280px;
+    min-height: 240px;
+    height: auto;
 }
 
 .mm-card-orange-wide {
-    height: 180px;
+    min-height: 140px;
+    height: auto;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
     .metamask-exact-grid {
         grid-template-columns: 1fr;
-        max-width: 400px;
+        max-width: 500px;
+        gap: 24px;
+    }
+
+    .mm-left-column,
+    .mm-right-column {
+        gap: 24px;
     }
 }
