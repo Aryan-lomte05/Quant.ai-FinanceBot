@@ -253,7 +253,7 @@ export default function GoalsPage() {
             <div className="space-y-0">
                 {/* SECTION 1: Hero - Mint Background */}
                 <section ref={heroRef} className="mm-section-mint relative perspective-container overflow-hidden">
-                    <div className="mm-container px-8 pt-8 pb-2 w-full max-w-7xl mx-auto">
+                    <div className="mm-container px-8 pt-8 pb-2 w-full max-w-[1920px] mx-auto">
                         {/* Hero Two-Column Layout */}
                         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-2">
                             {/* Left: Massive Headline */}
@@ -430,7 +430,7 @@ export default function GoalsPage() {
                     {/* Massive Cosmic Glow */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120%] h-[120%] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/40 via-[#0f0f13] to-[#0f0f13] pointer-events-none" />
 
-                    <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto relative z-10">
+                    <div className="mm-container px-8 py-16 w-full max-w-[1920px] mx-auto relative z-10">
                         {/* Header Row */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                             <div>
@@ -472,7 +472,7 @@ export default function GoalsPage() {
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-200/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                     <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-rose-200/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                    <div className="mm-container px-8 w-full max-w-7xl mx-auto relative z-10">
+                    <div className="mm-container px-8 w-full max-w-[1920px] mx-auto relative z-10">
                         <div className="text-center mb-16">
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
