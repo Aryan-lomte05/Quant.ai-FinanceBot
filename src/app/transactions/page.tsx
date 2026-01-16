@@ -110,7 +110,7 @@ export default function TransactionsPage() {
 
             {/* SECTION 1: Hero - Cream Background */}
             <section ref={heroRef} className="mm-section-cream mm-section-spacing relative perspective-container overflow-hidden">
-                <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                     {/* Massive Headline */}
                     <motion.div
                         style={{
@@ -159,7 +159,7 @@ export default function TransactionsPage() {
                             initial={{ opacity: 0, y: 60 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                             whileHover={{ y: -6 }}
                             onClick={() => setShowCSVUpload(!showCSVUpload)}
                             className="mm-card-hover relative h-[200px] rounded-2xl p-6 cursor-pointer overflow-hidden
@@ -194,7 +194,7 @@ export default function TransactionsPage() {
                             initial={{ opacity: 0, x: -60 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                             whileHover={{ y: -6 }}
                             onHoverStart={() => setIsHoveringScan(true)}
                             onHoverEnd={() => setIsHoveringScan(false)}
@@ -234,7 +234,7 @@ export default function TransactionsPage() {
                             initial={{ opacity: 0, x: 60 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                             whileHover={{ y: -6 }}
                             onHoverStart={() => setIsHoveringVoice(true)}
                             onHoverEnd={() => setIsHoveringVoice(false)}
@@ -286,7 +286,7 @@ export default function TransactionsPage() {
 
             {/* SECTION 2: Transactions List - Mint Background */}
             <section className="mm-section-mint mm-section-spacing">
-                <div className="mm-container px-8 py-16 w-full max-w-7xl mx-auto">
+                <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16">
                     {/* Search */}
                     <div className="relative mb-8">
                         <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 w-6 h-6" />
@@ -303,7 +303,7 @@ export default function TransactionsPage() {
                         initial={{ opacity: 0, y: 60 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                         className="mm-card card-3d"
                     >
                         <div className="flex items-center justify-between mb-8">
@@ -371,12 +371,12 @@ export default function TransactionsPage() {
 
             {/* SECTION 3: Add Transaction CTA - Orange Background */}
             <section className="mm-section-orange mm-section-spacing">
-                <div className="mm-container px-8 py-16 w-full max-w-4xl mx-auto text-center">
+                <div className="w-full max-w-[1920px] mx-auto px-8 md:px-12 lg:px-16 py-16 text-center">
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
                     >
                         <h2 className="text-5xl md:text-6xl font-black text-mm-black mb-6 leading-tight">
                             Add Your
