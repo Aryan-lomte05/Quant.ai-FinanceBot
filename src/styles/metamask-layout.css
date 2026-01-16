@@ -42,7 +42,7 @@
 }
 
 .mm-section-mint {
-    background: linear-gradient(180deg, rgb(229, 255, 195) 0%, rgb(215, 245, 185) 100%);
+    background: linear-gradient(180deg, rgb(255, 245, 235) 0%, rgb(255, 235, 220) 100%);
     position: relative;
     overflow-x: hidden;
 }
